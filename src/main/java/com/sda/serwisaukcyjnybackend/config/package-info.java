@@ -1,0 +1,1 @@
+package com.sda.serwisaukcyjnybackend.config;
