@@ -1,4 +1,4 @@
-image: gradle
+image: openjdk:11
 
 stages:
   - test
@@ -7,10 +7,9 @@ before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 build:
-  image: openjdk:11
   stage: test
   script:
-    - gradle test
+    - ./gradlew test
 
 after_script:
   - echo "End CI"
