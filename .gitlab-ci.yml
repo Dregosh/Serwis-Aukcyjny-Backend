@@ -1,15 +1,13 @@
-image: gradle:6.7.1-jdk-11
+image: gradle
 
 stages:
   - test
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 build:
+  image: openjdk:11
   stage: test
   script:
     - gradle test
