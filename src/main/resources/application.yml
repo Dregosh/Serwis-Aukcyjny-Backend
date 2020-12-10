@@ -1,8 +1,8 @@
 spring:
   datasource:
-    username: root
-    password: admin
-    url: jdbc:mysql://localhost:3306/serwis_aukcyjny?useSSL=false&serverTimezone=UTC
+    username: serwis_aukcyjny
+    password: serwis_aukcyjny
+    url: jdbc:mysql://localhost:4000/serwis_aukcyjny?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
   jpa:
     hibernate:
       ddl-auto: update

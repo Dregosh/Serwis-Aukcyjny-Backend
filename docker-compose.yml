@@ -1,0 +1,55 @@
+version: '3.8'
+
+volumes:
+  mysql_data_keycloak:
+    driver: local
+  mysql_data_backend:
+    driver: local
+
+services:
+  mysql_backend:
+    image: mysql:8
+    restart: always
+    volumes:
+    - mysql_data_backend:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: serwis_aukcyjny
+      MYSQL_USER: serwis_aukcyjny
+      MYSQL_PASSWORD: serwis_aukcyjny
+    ports:
+    - 4000:3306
+
+  mysql_keycloak:
+    image: mysql:8
+    restart: always
+    volumes:
+    - mysql_data_keycloak:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+    ports:
+    - 3310:3306
+    security_opt:
+      - seccomp:unconfined
+
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql_keycloak
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/imports/realm-export.json
+    volumes:
+    - ./realm-export.json:/tmp/imports/realm-export.json
+    ports:
+    - 8000:8080
+    depends_on:
+      - mysql_keycloak
