@@ -109,7 +109,24 @@
       }
     ],
     "client": {
-      "webapp": [],
+      "webapp": [
+        {
+          "id": "dca8dbca-9f1f-4449-93d3-f4fcb0cadc55",
+          "name": "ROLE_ADMIN",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "0cc71559-2ac9-4bb0-bc91-35997abb3122",
+          "attributes": {}
+        },
+        {
+          "id": "23ff6152-6ba5-4fef-9421-64e844aecf17",
+          "name": "ROLE_USER",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "0cc71559-2ac9-4bb0-bc91-35997abb3122",
+          "attributes": {}
+        }
+      ],
       "security-admin-console": [],
       "admin-cli": [],
       "account-console": [],
@@ -726,6 +743,9 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
+      "defaultRoles": [
+        "ROLE_USER"
+      ],
       "redirectUris": [
         "http://localhost:4200"
       ],
@@ -852,20 +872,6 @@
       },
       "protocolMappers": [
         {
-          "id": "aa6238c8-17e7-418a-a2ac-e360af94534f",
-          "name": "realm roles",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-realm-role-mapper",
-          "consentRequired": false,
-          "config": {
-            "multivalued": "true",
-            "user.attribute": "foo",
-            "access.token.claim": "true",
-            "claim.name": "realm_access.roles",
-            "jsonType.label": "String"
-          }
-        },
-        {
           "id": "0e262538-147f-4353-ba39-f4e770455a2b",
           "name": "audience resolve",
           "protocol": "openid-connect",
@@ -874,17 +880,31 @@
           "config": {}
         },
         {
+          "id": "aa6238c8-17e7-418a-a2ac-e360af94534f",
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "foo",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "multivalued": "true"
+          }
+        },
+        {
           "id": "159c0744-ac09-4aa5-a935-5c92886ca62b",
           "name": "client roles",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-client-role-mapper",
           "consentRequired": false,
           "config": {
-            "multivalued": "true",
             "user.attribute": "foo",
             "access.token.claim": "true",
             "claim.name": "resource_access.${client_id}.roles",
-            "jsonType.label": "String"
+            "jsonType.label": "String",
+            "multivalued": "true"
           }
         }
       ]
