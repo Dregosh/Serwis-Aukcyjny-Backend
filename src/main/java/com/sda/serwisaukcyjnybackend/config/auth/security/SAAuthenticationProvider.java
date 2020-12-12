@@ -43,8 +43,8 @@ public class SAAuthenticationProvider implements AuthenticationProvider {
                 accessToken.getSubject(), grantedAuthorities);
     }
 
-    private String extractUserIdFromToken(AccessToken token) {
-        var claims = (ArrayList<String>) token.getOtherClaims().get(USER_ID);
+    private Long extractUserIdFromToken(AccessToken token) {
+        var claims = (ArrayList<Long>) token.getOtherClaims().get(USER_ID);
         return claims.get(0);
     }
 }
