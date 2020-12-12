@@ -5,3 +5,23 @@ spring:
     password: password
   flyway:
     enabled: false
+keycloak:
+  realm: serwis-aukcyjny
+  auth-server-url: http://localhost:8000/auth
+  resource: webapp
+  public-client: false
+  ssl-required: external
+  principal-attribute: preferred_username
+  credentials:
+    secret: 1a1c1b88-d29c-44e2-a005-fe246bf39e90
+auth:
+  keycloak:
+    management:
+      clientId: admin-cli
+      serverUrl: ${keycloak.auth-server-url}
+      realm: ${keycloak.realm}
+      masterRealm: master
+      username: admin
+      password: admin
+  cors:
+    allowedOrigin: http://localhost:4200
