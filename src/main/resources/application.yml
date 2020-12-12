@@ -34,3 +34,10 @@ auth:
       password: admin
   cors:
     allowedOrigin: http://localhost:4200
+app:
+  message:
+    sendCron: 0 0/1 * 1/1 * ?
+    cleanCron: 0 0 12 * * ?
+    maxTries: 3
+  web:
+    guiUrl: http://localhost:4200

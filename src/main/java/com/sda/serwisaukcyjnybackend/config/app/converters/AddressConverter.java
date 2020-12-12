@@ -18,7 +18,6 @@ public class AddressConverter implements AttributeConverter<Address, String> {
         }  catch (JsonProcessingException e) {
             throw new RuntimeException();
         }
-
     }
 
     @Override

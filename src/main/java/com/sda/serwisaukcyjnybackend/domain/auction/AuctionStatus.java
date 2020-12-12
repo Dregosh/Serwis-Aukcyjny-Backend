@@ -1,9 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
-public enum Status {
-
+public enum AuctionStatus {
     CREATED,
     STARTED,
     ENDED
-
 }

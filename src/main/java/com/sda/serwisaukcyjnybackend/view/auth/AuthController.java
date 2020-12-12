@@ -1,7 +1,9 @@
 package com.sda.serwisaukcyjnybackend.view.auth;
 
+import com.sda.serwisaukcyjnybackend.application.auth.exception.InvalidVerificationCodeException;
 import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException;
 import com.sda.serwisaukcyjnybackend.application.auth.register.RegisterUserCommand;
+import com.sda.serwisaukcyjnybackend.application.auth.verification.VerifyUserCommand;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,18 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleUserAlreadyExist(){}
 
+    @ExceptionHandler(InvalidVerificationCodeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleInvalidVerificationCode(){}
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody @Valid RegisterUserCommand registerUserCommand) {
         commandDispatcher.handle(registerUserCommand);
+    }
+
+    @PostMapping("/email-verification")
+    public void verifyEmail(@RequestBody @Valid VerifyUserCommand verifyUserCommand) {
+        commandDispatcher.handle(verifyUserCommand);
     }
 }

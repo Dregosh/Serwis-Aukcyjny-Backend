@@ -26,4 +26,12 @@ public class VerificationCode {
         this.createdAt = LocalDateTime.now();
         this.code = UUID.randomUUID().toString();
     }
+
+    public String getUserEmail() {
+        return user.getEmail();
+    }
+
+    public String getUserDisplayName() {
+        return user.getDisplayName();
+    }
 }

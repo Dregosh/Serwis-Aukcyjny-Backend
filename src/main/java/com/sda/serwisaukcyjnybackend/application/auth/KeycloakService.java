@@ -24,12 +24,11 @@ public class KeycloakService {
         return response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
     }
 
-    public void verifyUserEmail(String principalId) {
-        var userResource = getUserResource(principalId);
-        var userRepresentation =  userResource.toRepresentation();
+    public void verifyUserEmail(String email) {
+        var userRepresentation =  getByEmail(email);
         userRepresentation.setEmailVerified(true);
         userRepresentation.setEnabled(true);
-        getUserResource(principalId).update(userRepresentation);
+        getUserResource(userRepresentation.getId()).update(userRepresentation);
     }
 
     public void logout(String principalId) {
@@ -42,6 +41,10 @@ public class KeycloakService {
 
     private UserResource getUserResource(String principalId) {
         return keycloak.realm(keycloakProperties.getRealm()).users().get(principalId);
+    }
+
+    private UserRepresentation getByEmail(String email) {
+        return keycloak.realm(keycloakProperties.getRealm()).users().search(email).get(0);
     }
 
 }
