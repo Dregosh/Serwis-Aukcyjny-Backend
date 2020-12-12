@@ -14,7 +14,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "purchase")
     private Auction auction;
 
     @ManyToOne
