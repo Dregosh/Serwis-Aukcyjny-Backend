@@ -38,4 +38,25 @@ public class User {
     private Long version;
     @Column(name = "promoted_auctions_count")
     private Integer promotedAuctionsCount;
+
+    public User(String email, String firstName,
+                String lastName, String displayName,
+                Address address, AccountStatus accountStatus,
+                AccountType accountType) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayName = displayName;
+        this.address = address;
+        this.accountStatus = accountStatus;
+        this.accountType = accountType;
+        this.version = 0L;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void validateDisplayName() {
+        if (displayName == null) {
+            displayName = firstName.substring(0, 1).concat(lastName);
+        }
+    }
 }

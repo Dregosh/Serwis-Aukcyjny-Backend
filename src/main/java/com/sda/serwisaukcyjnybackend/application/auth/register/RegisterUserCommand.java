@@ -26,7 +26,7 @@ public class RegisterUserCommand implements Command<Void> {
     private char[] password;
 
     @JsonIgnore
-    private void utilizePassword() {
+    public void utilizePassword() {
         Arrays.fill(password, '0');
     }
 }
