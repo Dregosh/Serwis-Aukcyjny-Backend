@@ -17,10 +17,10 @@ public class Auction {
     //TODO add fields:
     // - Image
     // - Category
+    // - View Count
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
-    @SequenceGenerator(name = "sequence-generator", sequenceName = "auction_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String title;
@@ -31,6 +31,5 @@ public class Auction {
     String location;
     LocalDateTime startDateTime;
     LocalDateTime endDateTime;
-    Integer viewedCount;
 
 }
