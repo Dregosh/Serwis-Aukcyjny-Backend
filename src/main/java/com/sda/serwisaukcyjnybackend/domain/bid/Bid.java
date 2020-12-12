@@ -20,9 +20,11 @@ public class Bid {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "auction_id")
     private Auction auction;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull

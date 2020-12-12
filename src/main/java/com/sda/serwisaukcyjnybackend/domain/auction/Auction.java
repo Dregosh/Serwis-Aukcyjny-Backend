@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -65,5 +66,5 @@ public class Auction {
     private Status status;
 
     @OneToMany(mappedBy = "auction")
-    private List<Bid> bids;
+    private List<Bid> bids = new ArrayList<>();
 }

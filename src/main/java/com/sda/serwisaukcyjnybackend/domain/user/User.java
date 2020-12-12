@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -37,5 +38,5 @@ public class User {
     @Column(name = "promoted_auctions_count")
     private Integer promotedAuctionsCount;
     @OneToMany(mappedBy = "user")
-    private List<Bid> bids;
+    private List<Bid> bids = new ArrayList<>();
 }
