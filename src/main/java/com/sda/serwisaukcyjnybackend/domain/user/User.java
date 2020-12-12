@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.user;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
+import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -38,6 +41,8 @@ public class User {
     private Long version;
     @Column(name = "promoted_auctions_count")
     private Integer promotedAuctionsCount;
+    @OneToMany(mappedBy = "user")
+    private List<Bid> bids = new ArrayList<>();
 
     public User(String email, String firstName,
                 String lastName, String displayName,
