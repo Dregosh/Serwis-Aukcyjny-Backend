@@ -1,5 +1,5 @@
 CREATE TABLE auction (
-    id BIGINT PRIMARY KEY,
+    id BIGINT PRIMARY KEY auto_increment,
     version BIGINT,
     title varchar(255),
     description text,
