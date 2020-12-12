@@ -11,7 +11,7 @@ public class CommandDispatcher {
     private final Map<Class<Command>, CommandHandler> handlersMap = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <R> CommandResult<R> handle(Command command) {
+    public <R> CommandResult<R> handle(Command<R> command) {
         if (handlersMap.containsKey(command.getClass())) {
             return handlersMap.get(command.getClass()).handle(command);
         }

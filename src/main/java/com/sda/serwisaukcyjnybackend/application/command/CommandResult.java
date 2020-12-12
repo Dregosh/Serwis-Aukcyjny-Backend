@@ -2,26 +2,20 @@ package com.sda.serwisaukcyjnybackend.application.command;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class CommandResult<T> {
     private final CommandResultType resultType;
     private final T payload;
 
-    public static CommandResult<Void> created() {
-        return new CommandResult<>(CommandResultType.CREATED, null);
+    public static CommandResult<Void> ok() {
+        return new CommandResult<>(CommandResultType.OK, null);
     }
 
     public static <T> CommandResult<T> created(T payload) {
-        return new CommandResult<>(CommandResultType.CREATED, payload);
-    }
-
-    public static CommandResult<Void> accepted() {
-        return new CommandResult<>(CommandResultType.ACCEPTED, null);
-    }
-
-    public static <T> CommandResult<T> accepted(T payload) {
-        return new CommandResult<>(CommandResultType.ACCEPTED, payload);
+        return new CommandResult<>(CommandResultType.OK, payload);
     }
 
     public static CommandResult<Void> failed() {
