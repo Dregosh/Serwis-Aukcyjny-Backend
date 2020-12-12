@@ -1,4 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.command;
 
-public interface Command<R> {
+import java.io.Serializable;
+
+public interface Command<R> extends Serializable {
 }
