@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
+import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import lombok.*;
 
 import javax.persistence.*;
@@ -67,4 +68,9 @@ public class Auction {
 
     @OneToMany(mappedBy = "auction")
     private List<Bid> bids = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "purchase_id", referencedColumnName = "id")
+    private Purchase purchase;
+
 }
