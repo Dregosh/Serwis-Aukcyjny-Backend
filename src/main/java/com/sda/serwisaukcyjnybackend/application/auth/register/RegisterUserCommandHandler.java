@@ -6,7 +6,9 @@ import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
 import com.sda.serwisaukcyjnybackend.domain.user.*;
+import com.sda.serwisaukcyjnybackend.domain.user.event.UserRegistered;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +20,13 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
     private final KeycloakService keycloakService;
     private final UserRepository userRepository;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid RegisterUserCommand command) {
-
         if (userRepository.existsByEmail(command.getEmail())) {
-            throw new UserAlreadyExistException();
+            throw new UserAlreadyExistException(command.getEmail());
         }
 
         var user = new User(command.getEmail(), command.getFirstName(),
@@ -37,7 +39,7 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
 
         var verificationCode = new VerificationCode(user);
         verificationCodeRepository.save(verificationCode);
-
+        eventPublisher.publishEvent(new UserRegistered(user.getDisplayName(), verificationCode.getCode(), user.getEmail()));
         return CommandResult.ok();
     }
 

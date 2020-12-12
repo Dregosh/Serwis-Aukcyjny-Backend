@@ -15,17 +15,17 @@ import javax.mail.internet.MimeMessage;
 public class CustomMailSender {
     private final JavaMailSender mailSender;
 
-    public void sendMail(String sendTo, String subject, String message) {
+    public void sendMail(String sendTo, String subject, String message) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(sendTo);
             helper.setSubject(subject);
-            helper.setText(message);
+            helper.setText(message, true);
         } catch (MessagingException e) {
             log.error("Could not send mail: {}", e.getMessage());
+            throw e;
         }
         mailSender.send(mimeMessage);
-        log.info("Message to {} was sent correctly", sendTo);
     }
 }

@@ -1,8 +1,13 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
+import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
-import lombok.*;
+import com.sda.serwisaukcyjnybackend.domain.shared.Address;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -16,7 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
 public class Auction {
 
     //TODO add fields:
@@ -51,8 +55,8 @@ public class Auction {
     @NotNull
     private Boolean isPromoted;
 
-    @NotNull
-    private String location;
+    @Convert(converter = AddressConverter.class)
+    private Address location;
 
     @Column(name = "start_date_time")
     @NotNull
@@ -64,13 +68,13 @@ public class Auction {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Status status;
+    private AuctionStatus status;
 
-    @OneToMany(mappedBy = "auction")
+    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
     private List<Bid> bids = new ArrayList<>();
 
     @OneToOne
-    @JoinColumn(name = "purchase_id", referencedColumnName = "id")
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
 }

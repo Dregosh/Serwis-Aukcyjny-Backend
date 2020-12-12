@@ -4,6 +4,7 @@ import com.sda.serwisaukcyjnybackend.application.auth.KeycloakService
 import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException
 import com.sda.serwisaukcyjnybackend.domain.shared.Address
 import com.sda.serwisaukcyjnybackend.domain.user.*
+import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -14,12 +15,14 @@ class RegisterUserCommandHandlerTest extends Specification {
     def keycloakService
     def userRepository
     def verificationCodeRepository
+    def eventPublisher
 
     def setup() {
         keycloakService = Mock(KeycloakService)
         userRepository = Mock(UserRepository)
         verificationCodeRepository = Mock(VerificationCodeRepository)
-        handler = new RegisterUserCommandHandler(keycloakService, userRepository, verificationCodeRepository)
+        eventPublisher = Mock(ApplicationEventPublisher)
+        handler = new RegisterUserCommandHandler(keycloakService, userRepository, verificationCodeRepository, eventPublisher)
     }
 
     def "should register user"() {
@@ -35,6 +38,7 @@ class RegisterUserCommandHandlerTest extends Specification {
         1 * userRepository.save(_) >> user
         1 * keycloakService.addUser(_)
         1 * verificationCodeRepository.save(_)
+        1 * eventPublisher.publishEvent(_)
     }
 
     def "should throw user already exist"() {
