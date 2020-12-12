@@ -1,5 +1,5 @@
 create table user (
-    id BIGINT PRIMARY KEY,
+    id BIGINT PRIMARY KEY auto_increment,
     email VARCHAR(75) not null unique,
     display_name VARCHAR(255) not null unique,
     address VARCHAR(500) not null,

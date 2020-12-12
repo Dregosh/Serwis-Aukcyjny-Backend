@@ -1,5 +1,5 @@
 CREATE TABLE bid (
-    id BIGINT PRIMARY KEY,
+    id BIGINT PRIMARY KEY auto_increment,
     auction_id BIGINT,
     user_id BIGINT,
     bid_price DECIMAL,
