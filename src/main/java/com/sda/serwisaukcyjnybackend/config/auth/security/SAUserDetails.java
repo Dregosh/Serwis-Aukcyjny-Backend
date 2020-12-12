@@ -9,7 +9,7 @@ import java.util.Collection;
 @Value
 public class SAUserDetails implements UserDetails {
     String email;
-    String userId;
+    Long userId;
     String principalId;
     Collection<? extends GrantedAuthority> grantedAuthorities;
 
