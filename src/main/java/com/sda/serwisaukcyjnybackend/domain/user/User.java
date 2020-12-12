@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.user;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
+import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -20,6 +22,10 @@ public class User {
     private Long id;
     @Email
     private String email;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
     @Column(name = "display_name")
     private String displayName;
     @Convert(converter = AddressConverter.class)
@@ -39,4 +45,29 @@ public class User {
 
     @OneToMany(mappedBy = "buyer")
     private List<Purchase> purchases;
+
+    @OneToMany(mappedBy = "user")
+    private List<Bid> bids = new ArrayList<>();
+
+    public User(String email, String firstName,
+                String lastName, String displayName,
+                Address address, AccountStatus accountStatus,
+                AccountType accountType) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayName = displayName;
+        this.address = address;
+        this.accountStatus = accountStatus;
+        this.accountType = accountType;
+        this.version = 0L;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void validateDisplayName() {
+        if (displayName == null) {
+            displayName = firstName.substring(0, 1).concat(lastName);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
+import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import lombok.*;
 
@@ -8,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -62,6 +65,9 @@ public class Auction {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Status status;
+
+    @OneToMany(mappedBy = "auction")
+    private List<Bid> bids = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "purchase_id", referencedColumnName = "id")
