@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.application.auth.register;
 
 import com.sda.serwisaukcyjnybackend.application.auth.KeycloakService;
+import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
@@ -21,6 +22,11 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid RegisterUserCommand command) {
+
+        if (userRepository.existsByEmail(command.getEmail())) {
+            throw new UserAlreadyExistException();
+        }
+
         var user = new User(command.getEmail(), command.getFirstName(),
                 command.getLastName(), command.getDisplayName(),
                 command.getAddress(), AccountStatus.ACTIVE, AccountType.NORMAL);
@@ -31,7 +37,7 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
 
         var verificationCode = new VerificationCode(user);
         verificationCodeRepository.save(verificationCode);
-        
+
         return CommandResult.ok();
     }
 

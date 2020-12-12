@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.application.auth.register
 
 import com.sda.serwisaukcyjnybackend.application.auth.KeycloakService
+import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException
 import com.sda.serwisaukcyjnybackend.domain.shared.Address
 import com.sda.serwisaukcyjnybackend.domain.user.*
 import spock.lang.Specification
@@ -30,9 +31,22 @@ class RegisterUserCommandHandlerTest extends Specification {
         handler.handle(command)
 
         then:
+        1 * userRepository.existsByEmail(_) >> false
         1 * userRepository.save(_) >> user
         1 * keycloakService.addUser(_)
         1 * verificationCodeRepository.save(_)
+    }
+
+    def "should throw user already exist"() {
+        given:
+        def command = prepareCommand();
+
+        when:
+        handler.handle(command)
+
+        then:
+        1 * userRepository.existsByEmail(_) >> true
+        UserAlreadyExistException exception = thrown()
     }
 
     static def prepareCommand() {
