@@ -1,7 +1,7 @@
 CREATE TABLE category
 (
-    id BIGINT,
+    id BIGINT PRIMARY KEY,
     name varchar(255),
     description varchar(255),
-    icon_name varchar(255)
+    icon_name varchar(15)
 );
