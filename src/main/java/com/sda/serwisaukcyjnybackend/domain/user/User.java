@@ -44,7 +44,7 @@ public class User {
     private Integer promotedAuctionsCount;
 
     @OneToMany(mappedBy = "buyer")
-    private List<Purchase> purchases;
+    private List<Purchase> purchases = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Bid> bids = new ArrayList<>();
