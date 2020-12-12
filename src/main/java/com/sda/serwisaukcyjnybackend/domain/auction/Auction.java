@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
+import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import lombok.*;
 
 import javax.persistence.*;
@@ -61,5 +62,9 @@ public class Auction {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Status status;
+
+    @OneToOne
+    @JoinColumn(name = "purchase_id", referencedColumnName = "id")
+    private Purchase purchase;
 
 }
