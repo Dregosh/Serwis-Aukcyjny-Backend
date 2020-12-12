@@ -14,13 +14,14 @@ import java.time.LocalDateTime;
 @Builder
 public class Auction {
 
+    //TODO add fields:
+    // - Image
+    // - Category
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @SequenceGenerator(name = "sequence-generator", sequenceName = "auction_sequence", allocationSize = 1)
     Long id;
-
-    // placeholder until Category is created
-    String category;
 
     String title;
     String description;
@@ -28,8 +29,8 @@ public class Auction {
     BigDecimal buyNowPrice;
     Boolean isPromoted;
     String location;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    Integer viewNumber;
+    LocalDateTime startDateTime;
+    LocalDateTime endDateTime;
+    Integer viewedCount;
 
 }
