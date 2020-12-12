@@ -33,10 +33,12 @@ public class Auction {
     @NotNull
     private String description;
 
+    @Column(name = "min_price")
     @NotNull
     @Min(0)
     private BigDecimal minPrice;
 
+    @Column(name = "buy_now_price")
     @NotNull
     @Min(0)
     private BigDecimal buyNowPrice;
