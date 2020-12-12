@@ -9,5 +9,5 @@ CREATE TABLE auction (
     location varchar(500),
     start_date_time datetime,
     end_date_time datetime,
-    status enum('CREATED','STARTED','ENDED')
+    status varchar(15)
 );

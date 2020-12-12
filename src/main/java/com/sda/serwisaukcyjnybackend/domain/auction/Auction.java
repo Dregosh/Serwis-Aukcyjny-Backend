@@ -22,38 +22,42 @@ public class Auction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Version
-    Long version;
+    private Long version;
 
     @NotNull
-    String title;
+    private String title;
 
     @NotNull
-    String description;
-
-    @NotNull
-    @Min(0)
-    BigDecimal minPrice;
+    private String description;
 
     @NotNull
     @Min(0)
-    BigDecimal buyNowPrice;
+    private BigDecimal minPrice;
 
     @NotNull
-    Boolean isPromoted;
+    @Min(0)
+    private BigDecimal buyNowPrice;
+
+    @Column(name = "is_promoted")
+    @NotNull
+    private Boolean isPromoted;
 
     @NotNull
-    String location;
+    private String location;
 
+    @Column(name = "start_date_time")
     @NotNull
-    LocalDateTime startDateTime;
+    private LocalDateTime startDateTime;
 
+    @Column(name = "end_date_time")
     @NotNull
-    LocalDateTime endDateTime;
+    private LocalDateTime endDateTime;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
-    Status status;
+    private Status status;
 
 }
