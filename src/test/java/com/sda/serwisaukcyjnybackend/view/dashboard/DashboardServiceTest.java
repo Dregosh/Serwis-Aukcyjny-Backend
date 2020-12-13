@@ -29,6 +29,7 @@ class DashboardServiceTest {
     @Test
     void shouldGetEmptyList() {
         //given
+        dashboardService.limit = 10;
         when(this.auctionRepository.findAllByStatusNotOrderByStartDateTimeDesc(
                 AuctionStatus.ENDED, PageRequest.of(0, 10)
         )).thenReturn(new ArrayList<>());
@@ -48,10 +49,9 @@ class DashboardServiceTest {
         sampleAuction.setBids(new ArrayList<>());
         sampleAuction.setMinPrice(BigDecimal.valueOf(100));
         sampleAuction.setBuyNowPrice(BigDecimal.valueOf(200));
-
         List<Auction> auctions = new ArrayList<>();
         auctions.add(sampleAuction);
-
+        dashboardService.limit = 10;
         when(this.auctionRepository.findAllByStatusNotOrderByStartDateTimeDesc(
                 AuctionStatus.ENDED, PageRequest.of(0, 10)
         )).thenReturn(auctions);

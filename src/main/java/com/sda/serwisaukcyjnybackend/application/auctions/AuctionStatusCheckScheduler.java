@@ -21,7 +21,8 @@ public class AuctionStatusCheckScheduler {
 
     @Scheduled(cron = "${app.auctions.expiredCheckCron}")
     public void checkForExpiredAuctions() {
-        List<Auction> allAuctions = this.auctionRepository.findAll();
+        List<Auction> allAuctions =
+                this.auctionRepository.findAllByStatus(AuctionStatus.STARTED);
         AtomicInteger expiredCount = new AtomicInteger();
         allAuctions.forEach(auction -> {
             if (auction.getEndDateTime().isBefore(LocalDateTime.now()) &&

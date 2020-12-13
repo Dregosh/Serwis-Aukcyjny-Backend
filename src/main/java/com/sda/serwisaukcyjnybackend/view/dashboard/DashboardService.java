@@ -6,6 +6,7 @@ import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import com.sda.serwisaukcyjnybackend.view.shared.AuctionMapper;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 public class DashboardService {
     private final AuctionRepository auctionRepository;
 
-//    @Value("${app.dashboard.limit}")
-    private final int LIMIT = 10;
+    @Value("${app.dashboard.limit}")
+    protected int limit = 10;
 
     public DashboardDTO getDashBoard() {
         List<SimpleAuctionDTO> lastAdded = this.getActiveAuctionsOrderByLatestCreated();
@@ -56,7 +57,7 @@ public class DashboardService {
     public List<SimpleAuctionDTO> getActiveAuctionsOrderByLatestCreated() {
         return this.auctionRepository
                 .findAllByStatusNotOrderByStartDateTimeDesc(
-                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                        AuctionStatus.ENDED, PageRequest.of(0, this.limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
@@ -65,7 +66,7 @@ public class DashboardService {
     private List<SimpleAuctionDTO> getActiveAuctionsOrderByClosestToFinish() {
         return this.auctionRepository
                 .findAllByStatusNotOrderByEndDateTimeAsc(
-                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                        AuctionStatus.ENDED, PageRequest.of(0, this.limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
@@ -74,7 +75,7 @@ public class DashboardService {
     private List<SimpleAuctionDTO> getAllLoggedUserAuctionsOrderByEndTime(
             Long loggedUserId) {
         return this.auctionRepository.findAllBySeller_IdOrderByEndDateTimeAsc(
-                loggedUserId, PageRequest.of(0, this.LIMIT))
+                loggedUserId, PageRequest.of(0, this.limit))
                                      .stream()
                                      .map(AuctionMapper::mapToSimpleAuction)
                                      .collect(Collectors.toList());
@@ -82,7 +83,7 @@ public class DashboardService {
 
     private List<SimpleAuctionDTO> getAllBiddedByLoggedUser(Long loggedUserId) {
         return this.auctionRepository
-                .findAllByBids_User_Id(loggedUserId, PageRequest.of(0, this.LIMIT))
+                .findAllByBids_User_Id(loggedUserId, PageRequest.of(0, this.limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
@@ -91,7 +92,7 @@ public class DashboardService {
     private List<SimpleAuctionDTO> getLoggedUserObservedAuctions(Long loggedUserId) {
         return this.auctionRepository
                 .findAllByObservations_User_IdOrderByEndDateTimeAsc(
-                        loggedUserId, PageRequest.of(0, this.LIMIT))
+                        loggedUserId, PageRequest.of(0, this.limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
@@ -100,7 +101,7 @@ public class DashboardService {
     private List<SimpleAuctionDTO> getFinishedAuctionsOrderByEndTime() {
         return this.auctionRepository
                 .findAllByStatusOrderByEndDateTimeDesc(
-                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                        AuctionStatus.ENDED, PageRequest.of(0, this.limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());

@@ -25,4 +25,6 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             Long observerId, Pageable pageable);
 
     List<Auction> findAllByBids_User_Id(Long bidderId, Pageable pageable);
+
+    List<Auction> findAllByStatus(AuctionStatus status);
 }
