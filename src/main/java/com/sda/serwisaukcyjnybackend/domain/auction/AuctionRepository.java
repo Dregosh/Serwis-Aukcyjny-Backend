@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    List<Auction> getAllOrOrderByStartDateTimeDesc(Pageable pageable);
+//    List<Auction> getAllOrderByStartDateTimeDesc(Pageable pageable);
 
 
 

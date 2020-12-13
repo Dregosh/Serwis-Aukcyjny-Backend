@@ -81,10 +81,13 @@ public class Auction {
     private List<Observation> observations = new ArrayList<>();
 
     public BigDecimal getMaxBid() {
-        return bids.stream()
-                .map(Bid::getBidPrice)
-                .max(BigDecimal::compareTo)
-                .orElse(minPrice);
-    }
+        //TODO
+        /*return bids.stream()
+                   .map(Bid::getBidPrice)
+                   .max(BigDecimal::compareTo)
+                   .orElse(minPrice);*/
 
+        //currently using mock for quick db testing purpose
+        return BigDecimal.ONE;
+    }
 }
