@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Value
 public class AuctionCreated {
+    String email;
+    Long id;
     String title;
     BigDecimal minPrice;
     BigDecimal buyNowPrice;
