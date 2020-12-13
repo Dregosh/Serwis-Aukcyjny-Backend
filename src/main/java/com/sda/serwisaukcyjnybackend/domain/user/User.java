@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.user;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
+import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.Data;
@@ -42,12 +43,12 @@ public class User {
     private Long version;
     @Column(name = "promoted_auctions_count")
     private Integer promotedAuctionsCount;
-
     @OneToMany(mappedBy = "buyer")
     private List<Purchase> purchases = new ArrayList<>();
-
     @OneToMany(mappedBy = "user")
     private List<Bid> bids = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Observation> observations = new ArrayList<>();
 
     public User(String email, String firstName,
                 String lastName, String displayName,

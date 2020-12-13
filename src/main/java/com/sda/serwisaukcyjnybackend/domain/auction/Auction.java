@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
+import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.AllArgsConstructor;
@@ -76,5 +77,8 @@ public class Auction {
     @OneToOne
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
+
+    @OneToMany(mappedBy = "auction")
+    private List<Observation> observations = new ArrayList<>();
 
 }
