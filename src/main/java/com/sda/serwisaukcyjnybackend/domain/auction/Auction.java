@@ -93,4 +93,22 @@ public class Auction {
                    .max(BigDecimal::compareTo)
                    .orElse(minPrice);
     }
+
+    public Auction(@NotNull User seller, @NotNull String title,
+                   @NotNull String description, @NotNull @Min(0) BigDecimal minPrice,
+                   @NotNull @Min(0) BigDecimal buyNowPrice, @NotNull Boolean isPromoted,
+                   @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime) {
+        this.seller = seller;
+        this.title = title;
+        this.description = description;
+        this.minPrice = minPrice;
+        this.buyNowPrice = buyNowPrice;
+        this.isPromoted = isPromoted;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.location = seller.getAddress();
+        this.version = 0L;
+        this.status = AuctionStatus.CREATED;
+    }
+
 }

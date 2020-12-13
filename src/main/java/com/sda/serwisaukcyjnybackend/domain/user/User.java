@@ -67,4 +67,16 @@ public class User {
         this.version = 0L;
         this.createdAt = LocalDateTime.now();
     }
+
+    public boolean canCreatePromotedAuction(int maxPromotedValue) {
+        return accountType == AccountType.PREMIUM && promotedAuctionsCount < maxPromotedValue;
+    }
+
+    public void addPromotedAuction() {
+        this.promotedAuctionsCount++;
+    }
+
+    public void removePromotedAuctionCount() {
+        this.promotedAuctionsCount--;
+    }
 }
