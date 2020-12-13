@@ -1,19 +1,16 @@
 package com.sda.serwisaukcyjnybackend.view.dashboard;
 
 import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
-import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
+import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import com.sda.serwisaukcyjnybackend.view.shared.AuctionMapper;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,11 +18,12 @@ import java.util.stream.Collectors;
 public class DashboardService {
     private final AuctionRepository auctionRepository;
 
-    @Value("${app.dashboard.limit}")
-    private int limit;
+//    @Value("${app.dashboard.limit}")
+    private final int LIMIT = 10;
 
     public DashboardDTO getDashBoard() {
         List<SimpleAuctionDTO> lastAdded = this.getActiveAuctionsOrderByLatestCreated();
+
         List<SimpleAuctionDTO> nearlyEnd = this.getActiveAuctionsOrderByClosestToFinish();
 
         List<SimpleAuctionDTO> loggedUserAuctions = new ArrayList<>();
@@ -35,12 +33,17 @@ public class DashboardService {
         AuthenticatedService.getLoggedUserInfo().ifPresent(
                 loggedUser -> {
                     Long loggedUserId = loggedUser.getUserId();
-
-                    //TODO: assign logged user's three auction lists:
-                    //      loggedUserAuctions, biddedAuctions, observedAuctions
+                    //TODO when getLoggedUserInfo works properly
                 });
 
-        List<SimpleAuctionDTO> justFinished = getFinishedAuctionsOrderByEndTime();
+        //Mock START (loggedUser with ID=3)
+        Long loggedUserId = 3L;
+        loggedUserAuctions = this.getAllLoggedUserAuctionsOrderByEndTime(loggedUserId);
+        biddedAuctions = this.getAllBiddedByLoggedUser(loggedUserId);
+        observedAuctions = this.getLoggedUserObservedAuctions(loggedUserId);
+        //Mock END
+
+        List < SimpleAuctionDTO > justFinished = this.getFinishedAuctionsOrderByEndTime();
 
         return new DashboardDTO(lastAdded,
                                 nearlyEnd,
@@ -50,39 +53,56 @@ public class DashboardService {
                                 justFinished);
     }
 
-    private List<SimpleAuctionDTO> getActiveAuctionsOrderByLatestCreated() {
-        return auctionRepository.findAll().stream()
-                                .filter(this.isAuctionActive())
-                                .sorted(Comparator.comparing(Auction::getStartDateTime)
-                                                  .reversed())
-                                .limit(this.limit)
-                                .map(AuctionMapper::mapToSimpleAuction)
-                                .collect(Collectors.toList());
+    public List<SimpleAuctionDTO> getActiveAuctionsOrderByLatestCreated() {
+        return this.auctionRepository
+                .findAllByStatusNotOrderByStartDateTimeDesc(
+                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                .stream()
+                .map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getActiveAuctionsOrderByClosestToFinish() {
-        return auctionRepository.findAll().stream()
-                                .filter(this.isAuctionActive())
-                                .sorted(Comparator.comparing(Auction::getEndDateTime))
-                                .limit(this.limit)
-                                .map(AuctionMapper::mapToSimpleAuction)
-                                .collect(Collectors.toList());
+        return this.auctionRepository
+                .findAllByStatusNotOrderByEndDateTimeAsc(
+                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                .stream()
+                .map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
+    }
+
+    private List<SimpleAuctionDTO> getAllLoggedUserAuctionsOrderByEndTime(
+            Long loggedUserId) {
+        return this.auctionRepository.findAllBySeller_IdOrderByEndDateTimeAsc(
+                loggedUserId, PageRequest.of(0, this.LIMIT))
+                                     .stream()
+                                     .map(AuctionMapper::mapToSimpleAuction)
+                                     .collect(Collectors.toList());
+    }
+
+    private List<SimpleAuctionDTO> getAllBiddedByLoggedUser(Long loggedUserId) {
+        return this.auctionRepository
+                .findAllByBids_User_Id(loggedUserId, PageRequest.of(0, this.LIMIT))
+                .stream()
+                .map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
+    }
+
+    private List<SimpleAuctionDTO> getLoggedUserObservedAuctions(Long loggedUserId) {
+        return this.auctionRepository
+                .findAllByObservations_User_IdOrderByEndDateTimeAsc(
+                        loggedUserId, PageRequest.of(0, this.LIMIT))
+                .stream()
+                .map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getFinishedAuctionsOrderByEndTime() {
-        return auctionRepository.findAll().stream()
-                                .filter(this.isAuctionFinished())
-                                .sorted(Comparator.comparing(Auction::getEndDateTime))
-                                .limit(this.limit)
-                                .map(AuctionMapper::mapToSimpleAuction)
-                                .collect(Collectors.toList());
-    }
-
-    private Predicate<Auction> isAuctionFinished() {
-        return auction -> auction.getEndDateTime().isBefore(LocalDateTime.now());
-    }
-
-    private Predicate<Auction> isAuctionActive() {
-        return auction -> auction.getEndDateTime().isAfter(LocalDateTime.now());
+        return this.auctionRepository
+                .findAllByStatusOrderByEndDateTimeDesc(
+                        AuctionStatus.ENDED, PageRequest.of(0, this.LIMIT))
+                .stream()
+                .map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
     }
 }

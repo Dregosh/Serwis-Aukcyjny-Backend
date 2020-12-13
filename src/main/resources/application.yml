@@ -39,6 +39,8 @@ app:
     sendCron: 0 0/1 * 1/1 * ?
     cleanCron: 0 0 12 * * ?
     maxTries: 3
+  auctions:
+    expiredCheckCron: 0/60 * * * * ?
   web:
     guiUrl: http://localhost:4200
   dashboard:
