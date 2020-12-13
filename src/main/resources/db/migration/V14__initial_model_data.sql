@@ -23,14 +23,14 @@ VALUES (null, 'user1@op.pl', 'user1', '{"city":"Warszawa","state":"mazowieckie",
 
 INSERT INTO auction
 VALUES (null, 0, 'Komputer X200', 'Zestaw komputerowy', 100, 200, 0,
-        '{"city":"Warszawa"}', '2020-12-13 12:00:00', '2020-12-20 12:00:00', 'CREATED',
+        '{"city":"Warszawa"}', '2020-12-17 12:00:00', '2020-12-24 12:00:00', 'CREATED',
         1),
-       (null, 0, 'TV Sony-5', 'Telewizor', 200, 500, 0, '{"city":"Kraków"}', '2020-12-11
-12:00:00', '2020-12-18 12:00:00', 'CREATED', 2),
+       (null, 0, 'TV Sony-5', 'Telewizor', 200, 500, 0, '{"city":"Kraków"}', '2020-12-15
+12:00:00', '2020-12-22 12:00:00', 'CREATED', 2),
        (null, 0, 'Radio', 'Radioodbiornik', 50, 100, 0, '{"city":"Poznań"}',
         '2020-12-05 12:00:00', '2020-12-12 12:00:00', 'ENDED', 3),
        (null, 0, 'Komputer P300', 'Zestaw komputerowy', 290, 600, 0, '{"city":"Poznań"}',
-        '2020-12-06 12:00:00', '2020-12-13 12:00:00', 'CREATED', 3),
+        '2020-12-06 12:00:00', '2020-12-20 12:00:00', 'STARTED', 3),
        (null, 0, 'TV Samsung-4', 'Telewizor', 200, 500, 0, '{"city":"Warszawa"}',
         '2020-12-10 12:00:00', '2020-12-24 12:00:00', 'STARTED', 2);
 
