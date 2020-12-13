@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.user;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +11,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
+@NamedEntityGraph(
+        name = "verification-with-user",
+        attributeNodes = {
+                @NamedAttributeNode("user")
+        }
+)
 public class VerificationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,8 +1,8 @@
-package com.sda.serwisaukcyjnybackend.domain.auction;
+package com.sda.serwisaukcyjnybackend.domain.audit;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuctionRepository extends JpaRepository<Auction, Long> {
+public interface AuditRepository extends JpaRepository<Audit, Long> {
 }

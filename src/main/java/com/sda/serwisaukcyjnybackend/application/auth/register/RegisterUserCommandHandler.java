@@ -32,7 +32,6 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
         var user = new User(command.getEmail(), command.getFirstName(),
                 command.getLastName(), command.getDisplayName(),
                 command.getAddress(), AccountStatus.ACTIVE, AccountType.NORMAL);
-        user.validateDisplayName();
         user = userRepository.save(user);
 
         keycloakService.addUser(UserRepresentationMapper.mapFromRegister(command, user.getId()));
