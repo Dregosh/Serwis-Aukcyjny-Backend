@@ -74,4 +74,16 @@ public class User {
         }
     }
 
+    public boolean canCreatePromotedAuction(int maxPromotedValue) {
+        return accountType == AccountType.PREMIUM && promotedAuctionsCount < maxPromotedValue;
+    }
+
+    public void addPromotedAuction() {
+        this.promotedAuctionsCount++;
+    }
+
+    public void removePromotedAuctionCount() {
+        this.promotedAuctionsCount--;
+    }
+
 }
