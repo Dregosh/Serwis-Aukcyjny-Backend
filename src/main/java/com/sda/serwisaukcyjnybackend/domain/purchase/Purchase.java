@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class Purchase {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
