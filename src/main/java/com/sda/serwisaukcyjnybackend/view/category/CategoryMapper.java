@@ -8,7 +8,6 @@ public class CategoryMapper {
         return CategoryDTO.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .description(category.getDescription())
                 .iconName(category.getIconName())
                 .build();
     }
