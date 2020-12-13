@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum MessageType {
     REGISTER_MESSAGE("Rejestracja"),
-    INVITE_MESSAGE("Witamy w aplikacji");
+    INVITE_MESSAGE("Witamy w aplikacji"),
+    AUCTION_CREATED_MESSAGE("Aukcja wystawiona");
 
     private final String subject;
 }
