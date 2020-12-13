@@ -14,6 +14,7 @@ public class AuctionMapper {
                                .title(auction.getTitle())
                                .bidPrice(auction.getMaxBid())
                                .buyNowPrice(auction.getBuyNowPrice())
+                               .alreadyBidded(!auction.getBids().isEmpty())
                                .build();
     }
 }

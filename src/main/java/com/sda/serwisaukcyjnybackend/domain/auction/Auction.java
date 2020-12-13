@@ -77,7 +77,8 @@ public class Auction {
     @NotNull
     private AuctionStatus status;
 
-    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
+    //                                 TODO - fetchType resolve
+    @OneToMany(mappedBy = "auction", fetch = FetchType.EAGER)
     private List<Bid> bids = new ArrayList<>();
 
     @OneToOne(mappedBy = "auction")
@@ -87,13 +88,9 @@ public class Auction {
     private List<Observation> observations = new ArrayList<>();
 
     public BigDecimal getMaxBid() {
-        //TODO
-        /*return bids.stream()
+        return bids.stream()
                    .map(Bid::getBidPrice)
                    .max(BigDecimal::compareTo)
-                   .orElse(minPrice);*/
-
-        //currently using mock for quick db testing purpose
-        return BigDecimal.ONE;
+                   .orElse(minPrice);
     }
 }
