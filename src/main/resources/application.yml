@@ -43,3 +43,6 @@ app:
     guiUrl: http://localhost:4200
   dashboard:
     limit: 10
+  auction:
+    maxPromoted: 10
+    duration: 14
