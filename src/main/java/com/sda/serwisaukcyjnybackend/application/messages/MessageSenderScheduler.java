@@ -20,7 +20,7 @@ public class MessageSenderScheduler {
     private final ITemplateEngine templateEngine;
 
     @Value("${app.message.maxTries}")
-    private Integer maxTries;
+    protected Integer maxTries;
 
     @Scheduled(cron = "${app.message.sendCron}")
     public void mailSend() {
