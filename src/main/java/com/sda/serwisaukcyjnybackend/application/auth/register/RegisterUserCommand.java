@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class RegisterUserCommand implements Command<Void> {
     @Email
     private String email;
+    @NotNull
     private String displayName;
     @NotEmpty
     private String firstName;

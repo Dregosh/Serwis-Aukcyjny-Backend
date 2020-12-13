@@ -68,12 +68,6 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void validateDisplayName() {
-        if (displayName == null) {
-            displayName = firstName.substring(0, 1).concat(lastName);
-        }
-    }
-
     public boolean canCreatePromotedAuction(int maxPromotedValue) {
         return accountType == AccountType.PREMIUM && promotedAuctionsCount < maxPromotedValue;
     }
@@ -85,5 +79,4 @@ public class User {
     public void removePromotedAuctionCount() {
         this.promotedAuctionsCount--;
     }
-
 }

@@ -11,6 +11,7 @@ import com.sda.serwisaukcyjnybackend.domain.user.event.UserEmailVerified;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 
@@ -22,6 +23,7 @@ public class VerifyUserCommandHandler implements CommandHandler<VerifyUserComman
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
+    @Transactional
     public CommandResult<Void> handle(@Valid VerifyUserCommand command) {
         verificationCodeRepository.findByCode(command.getToken())
                 .ifPresentOrElse(this::handleValidVerificationCode,
