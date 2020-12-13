@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 public class Purchase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "purchase")
+    @OneToOne
+    @JoinColumn(name = "auction_id")
     private Auction auction;
 
     @ManyToOne

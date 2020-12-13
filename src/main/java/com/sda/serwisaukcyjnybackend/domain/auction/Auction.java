@@ -73,8 +73,7 @@ public class Auction {
     @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
     private List<Bid> bids = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "purchase_id")
+    @OneToOne(mappedBy = "auction")
     private Purchase purchase;
 
 }
