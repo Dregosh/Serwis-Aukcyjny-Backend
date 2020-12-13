@@ -39,7 +39,8 @@ public class RegisterUserCommandHandler implements CommandHandler<RegisterUserCo
 
         var verificationCode = new VerificationCode(user);
         verificationCodeRepository.save(verificationCode);
-        eventPublisher.publishEvent(new UserRegistered(user.getDisplayName(), verificationCode.getCode(), user.getEmail()));
+        eventPublisher.publishEvent(new UserRegistered(user.getDisplayName(),
+                verificationCode.getCode(), user.getEmail()));
         return CommandResult.ok();
     }
 
