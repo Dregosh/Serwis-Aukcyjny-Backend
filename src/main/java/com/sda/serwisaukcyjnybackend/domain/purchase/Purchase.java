@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.purchase;
 
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
+import com.sda.serwisaukcyjnybackend.domain.rating.Rating;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,8 @@ public class Purchase {
 
     @NotNull
     private BigDecimal price;
+
+    @OneToOne(mappedBy = "purchase")
+    private Rating rating;
 
 }

@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.user;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
+import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
@@ -49,6 +50,8 @@ public class User {
     private List<Bid> bids = new ArrayList<>();
     @OneToMany(mappedBy = "user")
     private List<Observation> observations = new ArrayList<>();
+    @OneToMany(mappedBy = "seller")
+    private List<Auction> issuedAuctions = new ArrayList<>();
 
     public User(String email, String firstName,
                 String lastName, String displayName,
