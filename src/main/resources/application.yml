@@ -41,3 +41,5 @@ app:
     maxTries: 3
   web:
     guiUrl: http://localhost:4200
+  dashboard:
+    limit: 10

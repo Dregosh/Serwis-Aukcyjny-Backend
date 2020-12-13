@@ -80,4 +80,11 @@ public class Auction {
     @OneToMany(mappedBy = "auction")
     private List<Observation> observations = new ArrayList<>();
 
+    public BigDecimal getMaxBid() {
+        return bids.stream()
+                .map(Bid::getBidPrice)
+                .max(BigDecimal::compareTo)
+                .orElse(minPrice);
+    }
+
 }
