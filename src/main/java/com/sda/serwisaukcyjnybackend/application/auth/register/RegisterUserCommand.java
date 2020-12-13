@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class RegisterUserCommand implements Command<Void> {
     @Email
     private String email;
+    @NotNull
     private String displayName;
     @NotEmpty
     private String firstName;
@@ -27,6 +28,6 @@ public class RegisterUserCommand implements Command<Void> {
 
     @JsonIgnore
     public void utilizePassword() {
-        Arrays.fill(password, '0');
+        Arrays.fill(password, '*');
     }
 }

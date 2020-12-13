@@ -1,7 +1,7 @@
 package com.sda.serwisaukcyjnybackend.application.messages;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 public class CustomMailSender {
     private final JavaMailSender mailSender;
 
