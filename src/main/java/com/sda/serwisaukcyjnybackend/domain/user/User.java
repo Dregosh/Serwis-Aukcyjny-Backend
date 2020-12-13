@@ -67,11 +67,4 @@ public class User {
         this.version = 0L;
         this.createdAt = LocalDateTime.now();
     }
-
-    public void validateDisplayName() {
-        if (displayName == null) {
-            displayName = firstName.substring(0, 1).concat(lastName);
-        }
-    }
-
 }

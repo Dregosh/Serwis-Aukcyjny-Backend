@@ -21,7 +21,7 @@ public class DashboardService {
     private int limit;
 
     public DashboardDTO getDashBoard() {
-        List<SimpleAuctionDTO> lastAdded = auctionRepository.getAllOrOrderByStartDateTimeDesc(PageRequest.of(0, limit))
+        List<SimpleAuctionDTO> lastAdded = auctionRepository.findAll(PageRequest.of(0, limit))
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
