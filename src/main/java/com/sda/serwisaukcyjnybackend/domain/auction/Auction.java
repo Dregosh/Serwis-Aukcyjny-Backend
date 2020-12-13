@@ -5,6 +5,7 @@ import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
+import com.sda.serwisaukcyjnybackend.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +36,11 @@ public class Auction {
 
     @Version
     private Long version;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
     @NotNull
     private String title;
