@@ -17,4 +17,5 @@ public class SimpleAuctionDTO {
     private String mainPhotoName;
     private BigDecimal bidPrice;
     private BigDecimal buyNowPrice;
+    private Boolean alreadyBidded;
 }

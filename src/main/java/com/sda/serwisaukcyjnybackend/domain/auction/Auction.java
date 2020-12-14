@@ -77,7 +77,8 @@ public class Auction {
     @NotNull
     private AuctionStatus status;
 
-    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
+    //                                 TODO - fetchType resolve
+    @OneToMany(mappedBy = "auction", fetch = FetchType.EAGER)
     private List<Bid> bids = new ArrayList<>();
 
     @OneToOne(mappedBy = "auction")
@@ -88,9 +89,9 @@ public class Auction {
 
     public BigDecimal getMaxBid() {
         return bids.stream()
-                .map(Bid::getBidPrice)
-                .max(BigDecimal::compareTo)
-                .orElse(minPrice);
+                   .map(Bid::getBidPrice)
+                   .max(BigDecimal::compareTo)
+                   .orElse(minPrice);
     }
 
     public Auction(@NotNull User seller, @NotNull String title,
