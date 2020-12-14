@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CreateAuctionCommand implements Command<Void> {
+public class CreateAuctionCommand implements Command<Long> {
     @NotNull
     private String title;
     @NotNull
@@ -31,4 +31,6 @@ public class CreateAuctionCommand implements Command<Void> {
     private LocalDateTime startDate;
     @With
     private Long userId;
+    @NotNull
+    private Long categoryId;
 }
