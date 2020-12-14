@@ -1,15 +1,14 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
+import com.sda.serwisaukcyjnybackend.domain.auction.event.AuctionCreated;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -22,8 +21,9 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class Auction {
+@Getter
+@Setter
+public class Auction extends AbstractAggregateRoot<Auction> {
 
     //TODO add fields:
     // - Image
@@ -109,6 +109,12 @@ public class Auction {
         this.location = seller.getAddress();
         this.version = 0L;
         this.status = AuctionStatus.CREATED;
+    }
+
+    @PostPersist
+    private void informAboutCreatedAuction() {
+        registerEvent(new AuctionCreated(seller.getEmail(), id, title, minPrice, buyNowPrice,
+                startDateTime, endDateTime));
     }
 
 }
