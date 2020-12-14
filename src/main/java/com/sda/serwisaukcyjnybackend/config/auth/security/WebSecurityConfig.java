@@ -35,6 +35,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/auctions/*/images").authenticated()
                 .antMatchers("/api/edit-user").authenticated()
                 .antMatchers("/api/edit-user/*").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
                 .anyRequest().permitAll()
                 .and().csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
