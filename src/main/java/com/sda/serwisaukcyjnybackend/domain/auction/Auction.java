@@ -28,7 +28,6 @@ public class Auction {
 
     //TODO add fields:
     // - Image
-    // - Category
     // - View Count
 
     @Id
@@ -93,6 +92,7 @@ public class Auction {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
 
     public Auction(@NotNull User seller, @NotNull String title,
                    @NotNull String description, @NotNull @Min(0) BigDecimal minPrice,
