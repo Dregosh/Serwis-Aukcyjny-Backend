@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.auth.register;
 
+import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateUserCommand;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
