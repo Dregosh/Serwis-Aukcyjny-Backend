@@ -1,0 +1,1 @@
+alter table auction add column max_bid decimal;

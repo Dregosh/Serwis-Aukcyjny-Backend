@@ -1,15 +1,15 @@
 package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
+import com.sda.serwisaukcyjnybackend.domain.auction.event.AuctionCreated;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
+import com.sda.serwisaukcyjnybackend.domain.category.Category;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -22,12 +22,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class Auction {
+@Getter
+@Setter
+public class Auction extends AbstractAggregateRoot<Auction> {
 
     //TODO add fields:
-    // - Image
-    // - Category
     // - View Count
 
     @Id
@@ -77,8 +76,7 @@ public class Auction {
     @NotNull
     private AuctionStatus status;
 
-    //                                 TODO - fetchType resolve
-    @OneToMany(mappedBy = "auction", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
     private List<Bid> bids = new ArrayList<>();
 
     @OneToOne(mappedBy = "auction")
@@ -87,17 +85,21 @@ public class Auction {
     @OneToMany(mappedBy = "auction")
     private List<Observation> observations = new ArrayList<>();
 
-    public BigDecimal getMaxBid() {
-        return bids.stream()
-                   .map(Bid::getBidPrice)
-                   .max(BigDecimal::compareTo)
-                   .orElse(minPrice);
-    }
+    @Column(name = "max_bid")
+    private BigDecimal maxBid;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
+    private List<Photo> photos = new ArrayList<>();
 
     public Auction(@NotNull User seller, @NotNull String title,
                    @NotNull String description, @NotNull @Min(0) BigDecimal minPrice,
                    @NotNull @Min(0) BigDecimal buyNowPrice, @NotNull Boolean isPromoted,
-                   @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime) {
+                   @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime,
+                   @NotNull Category category) {
         this.seller = seller;
         this.title = title;
         this.description = description;
@@ -107,8 +109,31 @@ public class Auction {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.location = seller.getAddress();
+        this.category = category;
         this.version = 0L;
         this.status = AuctionStatus.CREATED;
+    }
+
+    @PostPersist
+    private void informAboutCreatedAuction() {
+        registerEvent(new AuctionCreated(seller.getEmail(), id, title, minPrice, buyNowPrice,
+                startDateTime, endDateTime));
+    }
+
+    public BigDecimal getMaxBid() {
+        return maxBid != null ? maxBid : minPrice;
+    }
+
+    public boolean canBeBidded() {
+        return !isBought() && status == AuctionStatus.STARTED;
+    }
+
+    public boolean isBought() {
+        return purchase != null && status == AuctionStatus.ENDED;
+    }
+
+    public Long getSellerId() {
+        return seller.getId();
     }
 
 }

@@ -31,4 +31,11 @@ public class Bid {
     @Min(0)
     @Column(name = "bid_price")
     private BigDecimal bidPrice;
+
+    public Bid(Auction auction, User user,
+               @NotNull @Min(0) BigDecimal bidPrice) {
+        this.auction = auction;
+        this.user = user;
+        this.bidPrice = bidPrice;
+    }
 }
