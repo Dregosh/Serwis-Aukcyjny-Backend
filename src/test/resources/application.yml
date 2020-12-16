@@ -5,6 +5,9 @@ spring:
     password: password
   flyway:
     enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
 keycloak:
   realm: serwis-aukcyjny
   auth-server-url: http://localhost:8000/auth
