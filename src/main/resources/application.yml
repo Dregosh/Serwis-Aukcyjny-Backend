@@ -14,15 +14,19 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
+  jackson:
+    serialization:
+      wr
 keycloak:
-  realm: serwis-aukcyjny
+  realm: Serwis-aukcyjny
   auth-server-url: http://localhost:8000/auth
   resource: webapp
   public-client: false
   ssl-required: external
   principal-attribute: preferred_username
   credentials:
-    secret: 1a1c1b88-d29c-44e2-a005-fe246bf39e90
+    secret: 86fcc1bc-f499-41b9-a855-00d52c0364fb
+  bearer-only: true
 auth:
   keycloak:
     management:
@@ -48,3 +52,5 @@ app:
   auction:
     maxPromoted: 10
     duration: 14
+  photo:
+    destination: /data/serwis-aukcyjny-photo

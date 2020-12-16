@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.view.auction;
 
 import com.sda.serwisaukcyjnybackend.application.auction.BidAuctionCommand;
+import com.sda.serwisaukcyjnybackend.application.auction.AddPhotosToAuctionCommand;
 import com.sda.serwisaukcyjnybackend.application.auction.CreateAuctionCommand;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -28,5 +30,11 @@ public class AuctionController {
     public void bidAuction(@RequestBody @Valid BidAuctionCommand bidAuctionCommand,
                            @AuthenticationPrincipal SAUserDetails userDetails) {
         commandDispatcher.handle(bidAuctionCommand.withUserId(userDetails.getUserId()));
+    }
+
+    @PostMapping("/{auctionId}/images")
+    public void addPhotoToAuction(@PathVariable(name = "auctionId") Long auctionId,
+                                  @RequestParam MultipartFile[] files) {
+        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, files));
     }
 }
