@@ -6,6 +6,7 @@ import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
+import com.sda.serwisaukcyjnybackend.domain.category.CategoryRepository;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,10 @@ import javax.validation.Valid;
 
 @Component
 @RequiredArgsConstructor
-public class CreateAuctionCommandHandler implements CommandHandler<CreateAuctionCommand, Void> {
+public class CreateAuctionCommandHandler implements CommandHandler<CreateAuctionCommand, Long> {
     private final UserRepository userRepository;
     private final AuctionRepository auctionRepository;
+    private final CategoryRepository categoryRepository;
 
     @Value("${app.auction.maxPromoted}")
     protected int maxPromoted;
@@ -28,22 +30,24 @@ public class CreateAuctionCommandHandler implements CommandHandler<CreateAuction
 
     @Override
     @Transactional
-    public CommandResult<Void> handle(@Valid CreateAuctionCommand command) {
-        User user = userRepository.getOne(command.getUserId());
+    public CommandResult<Long> handle(@Valid CreateAuctionCommand command) {
+        var user = userRepository.getOne(command.getUserId());
         validatePromotedAuction(command, user);
+        var category = categoryRepository.getOne(command.getCategoryId());
 
         var auction = new Auction(user, command.getTitle(),
                 command.getDescription(), command.getMinPrice(),
                 command.getBuyNowPrice(), command.getPromoted(),
-                command.getStartDate(), command.getStartDate().plusDays(duration));
+                command.getStartDate(), command.getStartDate().plusDays(duration),
+                category);
 
         if (auction.getIsPromoted()) {
             user.addPromotedAuction();
             userRepository.save(user);
         }
-        auctionRepository.save(auction);
+        var auctionId = auctionRepository.save(auction).getId();
 
-        return CommandResult.ok();
+        return CommandResult.created(auctionId);
     }
 
     private void validatePromotedAuction(CreateAuctionCommand command, User user) {
@@ -54,7 +58,7 @@ public class CreateAuctionCommandHandler implements CommandHandler<CreateAuction
     }
 
     @Override
-    public Class<? extends Command<Void>> commandClass() {
+    public Class<? extends Command<Long>> commandClass() {
         return CreateAuctionCommand.class;
     }
 }

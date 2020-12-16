@@ -2,6 +2,8 @@ package com.sda.serwisaukcyjnybackend.application.auction;
 
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
+import com.sda.serwisaukcyjnybackend.domain.category.Category;
+import com.sda.serwisaukcyjnybackend.domain.category.CategoryRepository;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.AccountType;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
@@ -27,6 +29,9 @@ class CreateAuctionCommandHandlerTest {
     UserRepository userRepository;
     @Mock
     AuctionRepository auctionRepository;
+    @Mock
+    CategoryRepository categoryRepository;
+
     @InjectMocks
     CreateAuctionCommandHandler handler;
 
@@ -43,6 +48,7 @@ class CreateAuctionCommandHandlerTest {
         when(userRepository.getOne(anyLong())).thenReturn(prepareUser(AccountType.PREMIUM, 2));
         when(userRepository.save(any())).thenReturn(new User());
         when(auctionRepository.save(any())).thenReturn(new Auction());
+        when(categoryRepository.getOne(anyLong())).thenReturn(new Category());
 
         //when && then
         handler.handle(command);
@@ -54,6 +60,7 @@ class CreateAuctionCommandHandlerTest {
         //given
         var command = prepareCommand(false);
         when(userRepository.getOne(anyLong())).thenReturn(prepareUser(AccountType.NORMAL, 0));
+        when(categoryRepository.getOne(anyLong())).thenReturn(new Category());
         when(auctionRepository.save(any())).thenReturn(new Auction());
 
         //when && then
@@ -81,7 +88,7 @@ class CreateAuctionCommandHandlerTest {
     CreateAuctionCommand prepareCommand(boolean isPromoted) {
         return new CreateAuctionCommand("test", "test",
                 BigDecimal.ZERO, BigDecimal.TEN, isPromoted,
-                LocalDateTime.now(), 1L);
+                LocalDateTime.now(), 1L, 1L);
 
     }
 }
