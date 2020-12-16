@@ -27,7 +27,6 @@ import java.util.List;
 public class Auction extends AbstractAggregateRoot<Auction> {
 
     //TODO add fields:
-    // - Image
     // - View Count
 
     @Id
@@ -93,6 +92,8 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
+    private List<Photo> photos = new ArrayList<>();
 
     public Auction(@NotNull User seller, @NotNull String title,
                    @NotNull String description, @NotNull @Min(0) BigDecimal minPrice,
