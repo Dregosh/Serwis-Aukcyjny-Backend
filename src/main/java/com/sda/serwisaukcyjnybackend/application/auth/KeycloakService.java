@@ -38,6 +38,13 @@ public class KeycloakService {
                 .get(userRepresentation.getId()).update(userRepresentation);
     }
 
+    public void updateUserEmail(String oldEmail, String newEmail) {
+        var userRepresentation = this.getByEmail(oldEmail);
+        userRepresentation.setEmail(newEmail);
+        keycloak.realm(keycloakProperties.getRealm()).users()
+                .get(userRepresentation.getId()).update(userRepresentation);
+    }
+
     public void updateUserPassword(String email, String newPassword) {
         var userRepresentation = this.getByEmail(email);
         CredentialRepresentation credentialRepresentation =
@@ -45,14 +52,6 @@ public class KeycloakService {
         credentialRepresentation.setType(OAuth2Constants.PASSWORD);
         credentialRepresentation.setValue(newPassword);
         userRepresentation.setCredentials(List.of(credentialRepresentation));
-        keycloak.realm(keycloakProperties.getRealm()).users()
-                .get(userRepresentation.getId()).update(userRepresentation);
-    }
-
-    public void updateUserEmail(String oldEmail, String newEmail) {
-        var userRepresentation = this.getByEmail(oldEmail);
-        userRepresentation.setEmail(newEmail);
-        userRepresentation.setUsername(newEmail);
         keycloak.realm(keycloakProperties.getRealm()).users()
                 .get(userRepresentation.getId()).update(userRepresentation);
     }

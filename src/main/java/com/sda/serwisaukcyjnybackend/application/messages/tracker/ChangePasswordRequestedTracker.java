@@ -6,7 +6,6 @@ import com.sda.serwisaukcyjnybackend.domain.message.MessageType;
 import com.sda.serwisaukcyjnybackend.domain.user.event.UpdateEmailRequested;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 
 @Component
 @RequiredArgsConstructor
-public class UpdateEmailRequestedTracker {
+public class ChangePasswordRequestedTracker {
     private static final String CONFIRM_URL = "confirmUrl";
     private static final String DISPLAY_NAME = "displayName";
 
@@ -27,16 +26,15 @@ public class UpdateEmailRequestedTracker {
     private String guiUrl;
 
     @Async
-    @EventListener
-//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-//    @Transactional
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional
     public void trackEvent(UpdateEmailRequested event) {
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put(CONFIRM_URL, guiUrl + "/emailchange/" + event.getToken());
+        payload.put(CONFIRM_URL, guiUrl + "/passwordchange/" + event.getToken());
         payload.put(DISPLAY_NAME, event.getDisplayName());
 
         Message message = new Message(payload,
-                                      MessageType.EMAIL_CHANGE_MESSAGE,
+                                      MessageType.CHANGE_PASSWORD_MESSAGE,
                                       event.getEmail());
         messageRepository.save(message);
     }

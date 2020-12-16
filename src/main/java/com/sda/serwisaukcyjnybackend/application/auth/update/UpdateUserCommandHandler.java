@@ -33,11 +33,6 @@ public class UpdateUserCommandHandler implements CommandHandler<UpdateUserComman
         this.keycloakService.updateUserInsensitiveData(command.getEmail(),
                                                        command.getFirstName(),
                                                        command.getLastName());
-        if (command.getPassword().length > 0) {
-            this.keycloakService.updateUserPassword(command.getEmail(),
-                                                    new String(command.getPassword()));
-            command.utilizePassword();
-        }
         return CommandResult.ok();
     }
 

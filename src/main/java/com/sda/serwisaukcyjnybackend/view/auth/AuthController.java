@@ -47,21 +47,4 @@ public class AuthController {
                                        @Valid ResendVerificationCodeCommand resendVerificationCodeCommand) {
         commandDispatcher.handle(resendVerificationCodeCommand);
     }
-
-    @PostMapping("/update")
-    public void update(@RequestBody @Valid UpdateUserCommand updateUserCommand) {
-        commandDispatcher.handle(updateUserCommand);
-    }
-
-    @PostMapping("/update-email-request")
-    public void updateEmailRequest(
-            @RequestBody @Valid UpdateEmailRequestCommand updateEmailRequestCommand) {
-        commandDispatcher.handle(updateEmailRequestCommand);
-    }
-
-    @PostMapping("/update-email-confirmation")
-    public void verifyUpdatedEmail(
-            @RequestBody @Valid UpdateEmailConfirmCommand updateEmailConfirmCommand) {
-        commandDispatcher.handle(updateEmailConfirmCommand);
-    }
 }
