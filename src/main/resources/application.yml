@@ -14,9 +14,6 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-  jackson:
-    serialization:
-      wr
 keycloak:
   realm: Serwis-aukcyjny
   auth-server-url: http://localhost:8000/auth
@@ -43,8 +40,6 @@ app:
     sendCron: 0 0/1 * 1/1 * ?
     cleanCron: 0 0 12 * * ?
     maxTries: 3
-  auctions:
-    expiredCheckCron: 0/60 * * * * ?
   web:
     guiUrl: http://localhost:4200
   dashboard:
@@ -52,5 +47,7 @@ app:
   auction:
     maxPromoted: 10
     duration: 14
+    expiredCheckCron: 0/60 * * * * ?
+    startCheckCron: 0/60 * * * * ?
   photo:
     destination: /data/serwis-aukcyjny-photo

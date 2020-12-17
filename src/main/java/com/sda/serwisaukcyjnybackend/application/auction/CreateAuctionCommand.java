@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,11 +18,7 @@ public class CreateAuctionCommand implements Command<Long> {
     private String title;
     @NotNull
     private String description;
-    @NotNull
-    @Min(0)
     private BigDecimal minPrice;
-    @NotNull
-    @Min(0)
     private BigDecimal buyNowPrice;
     @NotNull
     private Boolean promoted;

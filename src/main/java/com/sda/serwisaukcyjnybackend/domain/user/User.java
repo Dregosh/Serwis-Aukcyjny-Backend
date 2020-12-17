@@ -43,7 +43,7 @@ public class User {
     @Version
     private Long version;
     @Column(name = "promoted_auctions_count")
-    private Integer promotedAuctionsCount;
+    private int promotedAuctionsCount;
     @OneToMany(mappedBy = "buyer")
     private List<Purchase> purchases = new ArrayList<>();
     @OneToMany(mappedBy = "user")
@@ -76,7 +76,7 @@ public class User {
         this.promotedAuctionsCount++;
     }
 
-    public void removePromotedAuctionCount() {
+    public void removePromotedAuction() {
         this.promotedAuctionsCount--;
     }
 }
