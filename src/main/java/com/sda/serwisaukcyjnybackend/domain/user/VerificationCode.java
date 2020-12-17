@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -27,6 +28,8 @@ public class VerificationCode {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(name = "related_email")
+    private String relatedEmail;
 
     public VerificationCode(User user) {
         this.user = user;

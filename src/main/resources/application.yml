@@ -14,9 +14,6 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-  jackson:
-    serialization:
-      wr
 keycloak:
   realm: Serwis-aukcyjny
   auth-server-url: http://localhost:8000/auth

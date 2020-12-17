@@ -3,6 +3,9 @@ package com.sda.serwisaukcyjnybackend.view.auth;
 import com.sda.serwisaukcyjnybackend.application.auth.exception.InvalidVerificationCodeException;
 import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException;
 import com.sda.serwisaukcyjnybackend.application.auth.register.RegisterUserCommand;
+import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailConfirmCommand;
+import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailRequestCommand;
+import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateUserCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.verification.ResendVerificationCodeCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.verification.VerifyUserCommand;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
@@ -20,11 +23,13 @@ public class AuthController {
 
     @ExceptionHandler(UserAlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public void handleUserAlreadyExist(){}
+    public void handleUserAlreadyExist() {
+    }
 
     @ExceptionHandler(InvalidVerificationCodeException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleInvalidVerificationCode(){}
+    public void handleInvalidVerificationCode() {
+    }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,7 +43,8 @@ public class AuthController {
     }
 
     @PostMapping("/resending-verification-code")
-    public void resendVerificationCode(@RequestBody @Valid ResendVerificationCodeCommand resendVerificationCodeCommand) {
+    public void resendVerificationCode(@RequestBody
+                                       @Valid ResendVerificationCodeCommand resendVerificationCodeCommand) {
         commandDispatcher.handle(resendVerificationCodeCommand);
     }
 }
