@@ -1,6 +1,5 @@
 package com.sda.serwisaukcyjnybackend.config.auth.security;
 
-import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +33,8 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/auctions").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/auctions/bid").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/auctions/*/images").authenticated()
+                .antMatchers("/api/edit-user").authenticated()
+                .antMatchers("/api/edit-user/*").authenticated()
                 .anyRequest().permitAll()
                 .and().csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

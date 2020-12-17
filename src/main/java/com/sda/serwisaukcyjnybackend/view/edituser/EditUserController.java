@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.view.edituser;
 
+import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
 import com.sda.serwisaukcyjnybackend.application.auth.update.ChangePasswordCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailConfirmCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailRequestCommand;
@@ -7,7 +8,6 @@ import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateUserCommand;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,9 +20,10 @@ public class EditUserController {
     private final CommandDispatcher commandDispatcher;
 
     @GetMapping
-    public EditUserDTO getEditUserData(
-            @AuthenticationPrincipal SAUserDetails userDetails) {
-        return this.editUserService.getEditUserData(userDetails.getUserId());
+    public EditUserDTO getEditUserData() {
+        SAUserDetails loggedUser =
+                AuthenticatedService.getLoggedUserInfo().orElseThrow();
+        return this.editUserService.getEditUserData(loggedUser.getUserId());
     }
 
     @PostMapping("/update-insensitive-data")
@@ -43,9 +44,10 @@ public class EditUserController {
     }
 
     @GetMapping("/change-password-request")
-    public void changePasswordRequest(
-            @AuthenticationPrincipal SAUserDetails userDetails) {
-        this.editUserService.sendEmailToChangePasswordForm(userDetails.getUserId());
+    public void changePasswordRequest() {
+        SAUserDetails loggedUser =
+                AuthenticatedService.getLoggedUserInfo().orElseThrow();
+        this.editUserService.sendEmailToChangePasswordForm(loggedUser.getUserId());
     }
 
     @PostMapping("/change-password-confirmed")

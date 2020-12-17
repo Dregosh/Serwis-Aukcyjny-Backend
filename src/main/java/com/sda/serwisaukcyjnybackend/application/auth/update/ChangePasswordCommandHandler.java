@@ -18,7 +18,6 @@ import javax.validation.Valid;
 public class ChangePasswordCommandHandler
         implements CommandHandler<ChangePasswordCommand, Void> {
     private final VerificationCodeRepository verificationCodeRepository;
-    private final UserRepository userRepository;
     private final KeycloakService keycloakService;
 
     @Override
