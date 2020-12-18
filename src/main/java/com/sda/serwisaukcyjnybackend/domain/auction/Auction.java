@@ -48,12 +48,10 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     private String description;
 
     @Column(name = "min_price")
-    @NotNull
     @Min(0)
     private BigDecimal minPrice;
 
     @Column(name = "buy_now_price")
-    @NotNull
     @Min(0)
     private BigDecimal buyNowPrice;
 
@@ -97,7 +95,7 @@ public class Auction extends AbstractAggregateRoot<Auction> {
 
     public Auction(@NotNull User seller, @NotNull String title,
                    @NotNull String description, @NotNull @Min(0) BigDecimal minPrice,
-                   @NotNull @Min(0) BigDecimal buyNowPrice, @NotNull Boolean isPromoted,
+                   @Min(0) BigDecimal buyNowPrice, @NotNull Boolean isPromoted,
                    @NotNull LocalDateTime startDateTime, @NotNull LocalDateTime endDateTime,
                    @NotNull Category category) {
         this.seller = seller;
