@@ -10,7 +10,8 @@ public enum MessageType {
     INVITE_MESSAGE("Witamy w aplikacji"),
     AUCTION_CREATED_MESSAGE("Aukcja wystawiona"),
     EMAIL_CHANGE_MESSAGE("Zmiana adresu e-mail"),
-    CHANGE_PASSWORD_MESSAGE("Zmiana hasła użytkownika");
+    CHANGE_PASSWORD_MESSAGE("Zmiana hasła użytkownika"),
+    BUY_NOW_PURCHASED_MESSAGE("Zakup przez Kup teraz");
 
     private final String subject;
 }
