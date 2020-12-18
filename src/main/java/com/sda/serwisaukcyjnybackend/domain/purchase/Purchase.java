@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.domain.purchase;
 
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
+import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.rating.Rating;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import lombok.Data;
@@ -32,5 +33,11 @@ public class Purchase {
 
     @OneToOne(mappedBy = "purchase")
     private Rating rating;
+
+    public Purchase(Auction auction, Bid maxBid) {
+        this.buyer = maxBid.getUser();
+        this.auction = auction;
+        this.price = maxBid.getBidPrice();
+    }
 
 }

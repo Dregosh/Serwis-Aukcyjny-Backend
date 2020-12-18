@@ -136,4 +136,8 @@ public class Auction extends AbstractAggregateRoot<Auction> {
         return seller.getId();
     }
 
+    public void setStarted() {
+        status = AuctionStatus.STARTED;
+        maxBid = minPrice != null ? minPrice : BigDecimal.ZERO;
+    }
 }

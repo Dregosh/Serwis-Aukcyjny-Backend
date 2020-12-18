@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -27,4 +28,8 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     List<Auction> findAllByBids_User_Id(Long bidderId, Pageable pageable);
 
     List<Auction> findAllByStatus(AuctionStatus status);
+
+    List<Auction> findAllByStatusAndEndDateTimeBefore(AuctionStatus status, LocalDateTime now);
+
+    List<Auction> findAllByStatusAndStartDateTimeBefore(AuctionStatus status, LocalDateTime now);
 }
