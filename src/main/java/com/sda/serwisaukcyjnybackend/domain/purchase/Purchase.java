@@ -42,10 +42,11 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
     @NotNull
     private Boolean isBuyNow;
 
-    public Purchase(Auction auction, Bid maxBid) {
+    public Purchase(Auction auction, Bid maxBid, Boolean isBuyNow) {
         this.buyer = maxBid.getUser();
         this.auction = auction;
         this.price = maxBid.getBidPrice();
+        this.isBuyNow = isBuyNow;
     }
 
     @PostPersist
@@ -53,8 +54,10 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
         if (this.getIsBuyNow()) {
             registerEvent(new BuyNowPurchase(
                     id,
+                    auction.getSeller().getEmail(),
                     buyer.getEmail(),
                     auction.getSeller().getDisplayName(),
+                    buyer.getDisplayName(),
                     auction.getId(),
                     auction.getTitle(),
                     price

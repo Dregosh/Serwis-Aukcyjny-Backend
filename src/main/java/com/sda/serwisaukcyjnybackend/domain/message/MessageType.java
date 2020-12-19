@@ -11,7 +11,8 @@ public enum MessageType {
     AUCTION_CREATED_MESSAGE("Aukcja wystawiona"),
     EMAIL_CHANGE_MESSAGE("Zmiana adresu e-mail"),
     CHANGE_PASSWORD_MESSAGE("Zmiana hasła użytkownika"),
-    BUY_NOW_PURCHASED_MESSAGE("Zakup przez Kup teraz");
+    BUY_NOW_PURCHASED_MESSAGE("Zakup przez Kup teraz"),
+    BUY_NOW_SOLD_MESSAGE("Sprzedaż przez Kup teraz");
 
     private final String subject;
 }
