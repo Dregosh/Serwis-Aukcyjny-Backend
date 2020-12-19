@@ -2,7 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.purchase;
 
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
-import com.sda.serwisaukcyjnybackend.domain.purchase.event.BuyNowPurchase;
+import com.sda.serwisaukcyjnybackend.domain.purchase.event.PurchaseCreated;
 import com.sda.serwisaukcyjnybackend.domain.rating.Rating;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import lombok.Getter;
@@ -57,12 +57,11 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
     }
 
     @PostPersist
-    private void informAboutBuyNowPurchase() {
-        if (this.getIsBuyNow()) {
-            registerEvent(new BuyNowPurchase(id,
+    private void informAboutPurchase() {
+            registerEvent(new PurchaseCreated(id,
                     auction.getSeller().getEmail(), buyer.getEmail(),
                     auction.getSeller().getDisplayName(), buyer.getDisplayName(),
-                    auction.getId(), auction.getTitle(), price));
-        }
+                    auction.getId(), auction.getTitle(), price,
+                    isBuyNow));
     }
 }

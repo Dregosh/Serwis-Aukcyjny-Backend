@@ -2,7 +2,7 @@ package com.sda.serwisaukcyjnybackend.application.messages.tracker;
 
 import com.sda.serwisaukcyjnybackend.domain.message.Message;
 import com.sda.serwisaukcyjnybackend.domain.message.MessageRepository;
-import com.sda.serwisaukcyjnybackend.domain.purchase.event.BuyNowPurchase;
+import com.sda.serwisaukcyjnybackend.domain.purchase.event.PurchaseCreated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,16 +15,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BuyNowPurchaseTrackerTest {
+class PurchaseCreatedTrackerTest {
     @Mock
     MessageRepository messageRepository;
     @InjectMocks
-    BuyNowPurchaseTracker buyNowPurchaseTracker;
+    PurchaseCreatedTracker purchaseCreatedTracker;
 
     @Test
     void shouldTrackEvent() {
         //given
-        BuyNowPurchase event = new BuyNowPurchase(
+        PurchaseCreated event = new PurchaseCreated(
                 1L,
                 "seller@test",
                 "buyer@test",
@@ -32,12 +32,13 @@ class BuyNowPurchaseTrackerTest {
                 "buyer's name",
                 1L,
                 "auction title",
-                BigDecimal.ONE
+                BigDecimal.ONE,
+                Boolean.FALSE
         );
         when(messageRepository.save(any())).thenReturn(new Message());
 
         //when & then
-        buyNowPurchaseTracker.trackEvent(event);
+        purchaseCreatedTracker.trackEvent(event);
     }
 
 }
