@@ -3,6 +3,7 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 import com.sda.serwisaukcyjnybackend.application.auction.BidAuctionCommand;
 import com.sda.serwisaukcyjnybackend.application.auction.AddPhotosToAuctionCommand;
 import com.sda.serwisaukcyjnybackend.application.auction.CreateAuctionCommand;
+import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
+import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService.getLoggedUser;
+
 @RestController
 @RequestMapping("api/auctions")
 @RequiredArgsConstructor
@@ -21,15 +24,13 @@ public class AuctionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long createAuction(@RequestBody @Valid CreateAuctionCommand createAuctionCommand,
-                              @AuthenticationPrincipal SAUserDetails userDetails) {
-        return commandDispatcher.handle(createAuctionCommand.withUserId(userDetails.getUserId())).getPayload();
+    public Long createAuction(@RequestBody @Valid CreateAuctionCommand createAuctionCommand) {
+        return commandDispatcher.handle(createAuctionCommand.withUserId(getLoggedUser().getUserId())).getPayload();
     }
 
     @PostMapping("/bid")
-    public void bidAuction(@RequestBody @Valid BidAuctionCommand bidAuctionCommand,
-                           @AuthenticationPrincipal SAUserDetails userDetails) {
-        commandDispatcher.handle(bidAuctionCommand.withUserId(userDetails.getUserId()));
+    public void bidAuction(@RequestBody @Valid BidAuctionCommand bidAuctionCommand) {
+        commandDispatcher.handle(bidAuctionCommand.withUserId(getLoggedUser().getUserId()));
     }
 
     @PostMapping("/{auctionId}/images")
