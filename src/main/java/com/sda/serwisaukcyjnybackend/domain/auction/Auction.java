@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import com.sda.serwisaukcyjnybackend.config.app.converters.AddressConverter;
 import com.sda.serwisaukcyjnybackend.domain.auction.event.AuctionCreated;
+import com.sda.serwisaukcyjnybackend.domain.auction.event.AuctionEndedWithoutPurchase;
 import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.category.Category;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
@@ -113,9 +114,24 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     }
 
     @PostPersist
+    private void informAboutEvent() {
+
+        if(this.getStatus() == AuctionStatus.CREATED) {
+            informAboutCreatedAuction();
+        }
+
+        if(this.getStatus() == AuctionStatus.ENDED && this.bids.isEmpty()) {
+            informAboutEndedAuctionWithoutPurchase();
+        }
+    }
+
     private void informAboutCreatedAuction() {
         registerEvent(new AuctionCreated(seller.getEmail(), id, title, minPrice, buyNowPrice,
                 startDateTime, endDateTime));
+    }
+
+    private void informAboutEndedAuctionWithoutPurchase() {
+        registerEvent(new AuctionEndedWithoutPurchase(seller.getEmail(), id, title));
     }
 
     public BigDecimal getMaxBid() {
