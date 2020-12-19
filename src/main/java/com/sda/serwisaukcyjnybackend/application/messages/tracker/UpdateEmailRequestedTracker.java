@@ -27,12 +27,12 @@ public class UpdateEmailRequestedTracker {
     private String guiUrl;
 
     @Async
-    @EventListener
-//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-//    @Transactional
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional
     public void trackEvent(UpdateEmailRequested event) {
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put(CONFIRM_URL, guiUrl + "/emailchange/" + event.getToken());
+        payload.put(CONFIRM_URL,
+                    guiUrl + "/auth/email-change-confirm/" + event.getToken());
         payload.put(DISPLAY_NAME, event.getDisplayName());
 
         Message message = new Message(payload,

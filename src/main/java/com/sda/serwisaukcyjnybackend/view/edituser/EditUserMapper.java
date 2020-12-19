@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.view.edituser;
 
+import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 
 public class EditUserMapper {
@@ -10,11 +11,13 @@ public class EditUserMapper {
                           .displayName(user.getDisplayName())
                           .firstName(user.getFirstName())
                           .lastName(user.getLastName())
-                          .addressCity(user.getAddress().getCity())
-                          .addressState(user.getAddress().getState())
-                          .addressStreet(user.getAddress().getStreet())
-                          .addressNumber(user.getAddress().getNumber())
-                          .addressPostal(user.getAddress().getPostal())
+                          .address(new Address(
+                                  user.getAddress().getCity(),
+                                  "województwo",
+                                  user.getAddress().getStreet(),
+                                  user.getAddress().getNumber(),
+                                  user.getAddress().getPostal()
+                          ))
                           .build();
     }
 }

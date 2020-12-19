@@ -11,6 +11,7 @@ import com.sda.serwisaukcyjnybackend.domain.user.event.UpdateEmailRequested;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
@@ -25,6 +26,7 @@ public class UpdateEmailRequestCommandHandler
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
+    @Transactional
     public CommandResult<Void> handle(@Valid UpdateEmailRequestCommand command) {
         User user = this.userRepository.findByEmail(command.getOldEmail())
                                        .orElseThrow(NoSuchElementException::new);
