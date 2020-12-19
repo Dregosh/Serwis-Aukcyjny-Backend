@@ -38,7 +38,7 @@ class FinishAuctionCommandHandlerTest {
     @Test
     void shouldFinishPromotedAuctionWithPurchase() {
        //given
-        var command = new FinishAuctionCommand(1L);
+        var command = new FinishAuctionCommand(1L, Boolean.FALSE);
         when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.TEN, BigDecimal.ONE, true));
         when(userRepository.save(any())).thenReturn(new User());
@@ -53,7 +53,7 @@ class FinishAuctionCommandHandlerTest {
     @Test
     void shouldFinishNormalAuctionWithPurchase() {
         //given
-        var command = new FinishAuctionCommand(1L);
+        var command = new FinishAuctionCommand(1L, Boolean.FALSE);
         when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.TEN, BigDecimal.ONE, false));
         when(bidRepository.existsByAuction(any())).thenReturn(true);
@@ -67,7 +67,7 @@ class FinishAuctionCommandHandlerTest {
     @Test
     void shouldFinishPromotedAuctionWithoutPurchase() {
         //given
-        var command = new FinishAuctionCommand(1L);
+        var command = new FinishAuctionCommand(1L, Boolean.FALSE);
         when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.ONE, BigDecimal.TEN, true));
         when(bidRepository.existsByAuction(any())).thenReturn(false);
@@ -80,7 +80,7 @@ class FinishAuctionCommandHandlerTest {
     @Test
     void shouldFinishNormalAuctionWithoutPurchase() {
         //given
-        var command = new FinishAuctionCommand(1L);
+        var command = new FinishAuctionCommand(1L, Boolean.FALSE);
         when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.ONE, BigDecimal.TEN, false));
         when(bidRepository.existsByAuction(any())).thenReturn(false);
