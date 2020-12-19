@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.auth;
 
+import com.sda.serwisaukcyjnybackend.application.auth.exception.NotAuthenticatedException;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,5 +18,9 @@ public class AuthenticatedService {
             return Optional.ofNullable((SAUserDetails) authentication.getPrincipal());
         }
         return Optional.empty();
+    }
+
+    public static SAUserDetails getLoggedUser() {
+        return getLoggedUserInfo().orElseThrow(NotAuthenticatedException::new);
     }
 }

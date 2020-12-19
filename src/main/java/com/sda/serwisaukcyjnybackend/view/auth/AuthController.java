@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService.getLoggedUser;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/auth")
@@ -53,8 +55,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void logoutUser(@AuthenticationPrincipal SAUserDetails userDetails) {
-        commandDispatcher.handle(new LogoutUserCommand(userDetails.getPrincipalId()));
+    public void logoutUser() {
+        commandDispatcher.handle(new LogoutUserCommand(getLoggedUser().getPrincipalId()));
     }
 
     @GetMapping("/existing/{email}/{displayName}")

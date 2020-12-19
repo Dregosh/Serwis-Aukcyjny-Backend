@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService.getLoggedUser;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/edit-user")
@@ -45,9 +47,7 @@ public class EditUserController {
 
     @GetMapping("/change-password-request")
     public void changePasswordRequest() {
-        SAUserDetails loggedUser =
-                AuthenticatedService.getLoggedUserInfo().orElseThrow();
-        this.editUserService.sendEmailToChangePasswordForm(loggedUser.getUserId());
+        this.editUserService.sendEmailToChangePasswordForm(getLoggedUser().getUserId());
     }
 
     @PostMapping("/change-password-confirmed")
