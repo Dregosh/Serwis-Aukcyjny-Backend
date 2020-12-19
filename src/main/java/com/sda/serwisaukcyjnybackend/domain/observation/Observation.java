@@ -23,4 +23,9 @@ public class Observation {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Observation(Auction auction, User user) {
+        this.auction = auction;
+        this.user = user;
+    }
 }
