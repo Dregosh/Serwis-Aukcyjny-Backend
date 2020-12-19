@@ -3,7 +3,7 @@ package com.sda.serwisaukcyjnybackend.application.messages.tracker;
 import com.sda.serwisaukcyjnybackend.domain.message.Message;
 import com.sda.serwisaukcyjnybackend.domain.message.MessageRepository;
 import com.sda.serwisaukcyjnybackend.domain.message.MessageType;
-import com.sda.serwisaukcyjnybackend.domain.purchase.event.BuyNowPurchase;
+import com.sda.serwisaukcyjnybackend.domain.purchase.event.PurchaseCreated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 @Component
 @RequiredArgsConstructor
-public class BuyNowPurchaseTracker {
+public class PurchaseCreatedTracker {
 
     private static final String OTHER_PARTY_NAME = "otherPartyName";
     private static final String AUCTION_TITLE = "auctionTitle";
@@ -32,32 +32,40 @@ public class BuyNowPurchaseTracker {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional
-    public void trackEvent(BuyNowPurchase event) {
+    public void trackEvent(PurchaseCreated event) {
         Message buyerMessage = createBuyerMessage(event);
         messageRepository.save(buyerMessage);
         Message sellerMessage = createSellerMessage(event);
         messageRepository.save(sellerMessage);
     }
 
-    private Message createBuyerMessage(BuyNowPurchase event) {
+    private Message createBuyerMessage(PurchaseCreated event) {
         HashMap<String, Object> payload = createCommonPayload(event);
         payload.put(OTHER_PARTY_NAME, event.getSellerName());
         return new Message(payload, MessageType.BUY_NOW_PURCHASED_MESSAGE, event.getBuyerEmail());
     }
 
-    private Message createSellerMessage(BuyNowPurchase event) {
+    private Message createSellerMessage(PurchaseCreated event) {
         HashMap<String, Object> payload = createCommonPayload(event);
         payload.put(OTHER_PARTY_NAME, event.getBuyerName());
-        return new Message(payload, MessageType.BUY_NOW_SOLD_MESSAGE, event.getSellerEmail());
+        return new Message(payload, getSellerMessageType(event.getIsBuyNow()), event.getSellerEmail());
     }
 
-    private HashMap<String, Object> createCommonPayload(BuyNowPurchase event) {
+    private HashMap<String, Object> createCommonPayload(PurchaseCreated event) {
         HashMap<String, Object> payload = new HashMap<>();
         payload.put(AUCTION_TITLE, event.getAuctionTitle());
         payload.put(PRICE, event.getPrice());
         payload.put(AUCTION_URL, guiUrl + "/auction/" + event.getAuctionId());
         payload.put(PURCHASE_URL, guiUrl + "/purchase/" + event.getPurchaseId());
         return payload;
+    }
+
+    private MessageType getSellerMessageType(Boolean isBuyNow) {
+        if (isBuyNow) {
+            return MessageType.BUY_NOW_SOLD_MESSAGE;
+        } else {
+            return MessageType.BID_SOLD_MESSAGE;
+        }
     }
 
 }
