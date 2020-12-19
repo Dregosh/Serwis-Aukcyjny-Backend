@@ -35,8 +35,7 @@ class ResendVerificationCodeHandlerTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
         when(verificationCodeRepository.save(any())).thenReturn(new VerificationCode());
         doNothing().when(eventPublisher).publishEvent(any(UserRegistered.class));
-        var command = new ResendVerificationCodeCommand();
-        command.setEmail("test@test");
+        var command = new ResendVerificationCodeCommand("test@test");
 
         //when
         handler.handle(command);
@@ -46,8 +45,7 @@ class ResendVerificationCodeHandlerTest {
     void shouldNotResendIfEmailNotFound() {
         //given
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
-        var command = new ResendVerificationCodeCommand();
-        command.setEmail("test@test");
+        var command = new ResendVerificationCodeCommand("test@test");
 
         //when
         handler.handle(command);

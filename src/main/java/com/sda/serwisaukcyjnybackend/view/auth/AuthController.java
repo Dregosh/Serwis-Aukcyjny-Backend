@@ -4,16 +4,11 @@ import com.sda.serwisaukcyjnybackend.application.auth.exception.InvalidVerificat
 import com.sda.serwisaukcyjnybackend.application.auth.exception.UserAlreadyExistException;
 import com.sda.serwisaukcyjnybackend.application.auth.logout.LogoutUserCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.register.RegisterUserCommand;
-import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailConfirmCommand;
-import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateEmailRequestCommand;
-import com.sda.serwisaukcyjnybackend.application.auth.update.UpdateUserCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.verification.ResendVerificationCodeCommand;
 import com.sda.serwisaukcyjnybackend.application.auth.verification.VerifyUserCommand;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
-import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,9 +44,8 @@ public class AuthController {
     }
 
     @PostMapping("/resending-verification-code")
-    public void resendVerificationCode(@RequestBody
-                                       @Valid ResendVerificationCodeCommand resendVerificationCodeCommand) {
-        commandDispatcher.handle(resendVerificationCodeCommand);
+    public void resendVerificationCode() {
+        commandDispatcher.handle(new ResendVerificationCodeCommand(getLoggedUser().getEmail()));
     }
 
     @PostMapping("/logout")

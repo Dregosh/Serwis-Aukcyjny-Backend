@@ -11,6 +11,7 @@ import com.sda.serwisaukcyjnybackend.domain.user.event.UserRegistered;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 
@@ -22,6 +23,7 @@ public class ResendVerificationCodeHandler implements CommandHandler<ResendVerif
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
+    @Transactional
     public CommandResult<Void> handle(@Valid ResendVerificationCodeCommand command) {
         userRepository.findByEmail(command.getEmail())
                 .ifPresent(this::resendVerificationCode);
