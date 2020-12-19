@@ -130,10 +130,17 @@ public class Auction extends AbstractAggregateRoot<Auction> {
         return purchase != null && status == AuctionStatus.ENDED;
     }
 
+    public void markAsEnded() {
+        status = AuctionStatus.ENDED;
+    }
+
+    public boolean canBeBoughtNow() {
+        return status == AuctionStatus.CREATED && purchase == null;
+    }
+
     public Long getSellerId() {
         return seller.getId();
     }
-
     public void setStarted() {
         status = AuctionStatus.STARTED;
         maxBid = minPrice != null ? minPrice : BigDecimal.ZERO;
