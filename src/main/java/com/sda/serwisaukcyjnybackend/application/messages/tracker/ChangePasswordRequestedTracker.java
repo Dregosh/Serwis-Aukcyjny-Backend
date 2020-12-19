@@ -29,7 +29,8 @@ public class ChangePasswordRequestedTracker {
     @Transactional*/
     public void trackEvent(ChangePasswordRequested event) {
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put(CONFIRM_URL, guiUrl + "/passwordchange/" + event.getToken());
+        payload.put(CONFIRM_URL,
+                    guiUrl + "/auth/password-change-form/" + event.getToken());
         payload.put(DISPLAY_NAME, event.getDisplayName());
 
         Message message = new Message(payload,

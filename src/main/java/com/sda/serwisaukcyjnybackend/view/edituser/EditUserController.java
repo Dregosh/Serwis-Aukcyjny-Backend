@@ -16,41 +16,40 @@ import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedServic
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/edit-user")
 public class EditUserController {
     private final EditUserService editUserService;
     private final CommandDispatcher commandDispatcher;
 
-    @GetMapping
+    @GetMapping("/api/edit-user")
     public EditUserDTO getEditUserData() {
         SAUserDetails loggedUser =
                 AuthenticatedService.getLoggedUserInfo().orElseThrow();
         return this.editUserService.getEditUserData(loggedUser.getUserId());
     }
 
-    @PostMapping("/update-insensitive-data")
+    @PostMapping("/api/edit-user/update-insensitive-data")
     public void update(@RequestBody @Valid UpdateUserCommand updateUserCommand) {
         this.commandDispatcher.handle(updateUserCommand);
     }
 
-    @PostMapping("/update-email-request")
+    @PostMapping("/api/edit-user/update-email-request")
     public void updateEmailRequest(
             @RequestBody @Valid UpdateEmailRequestCommand updateEmailRequestCommand) {
         this.commandDispatcher.handle(updateEmailRequestCommand);
     }
 
-    @PostMapping("/update-email-confirmation")
+    @PostMapping("/api/update-email-confirmation")
     public void verifyUpdatedEmail(
             @RequestBody @Valid UpdateEmailConfirmCommand updateEmailConfirmCommand) {
         this.commandDispatcher.handle(updateEmailConfirmCommand);
     }
 
-    @GetMapping("/change-password-request")
+    @GetMapping("/api/edit-user/change-password-request")
     public void changePasswordRequest() {
         this.editUserService.sendEmailToChangePasswordForm(getLoggedUser().getUserId());
     }
 
-    @PostMapping("/change-password-confirmed")
+    @PostMapping("/api/change-password-confirmed")
     public void saveChangedPassword(@RequestBody @Valid ChangePasswordCommand
                                             changePasswordCommand) {
         this.commandDispatcher.handle(changePasswordCommand);
