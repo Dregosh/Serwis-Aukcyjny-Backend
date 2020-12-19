@@ -25,11 +25,10 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@NamedEntityGraph(name = "auction-photos", attributeNodes = {
+        @NamedAttributeNode("photos")
+})
 public class Auction extends AbstractAggregateRoot<Auction> {
-
-    //TODO add fields:
-    // - View Count
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -157,8 +156,13 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     public Long getSellerId() {
         return seller.getId();
     }
+
     public void setStarted() {
         status = AuctionStatus.STARTED;
         maxBid = minPrice != null ? minPrice : BigDecimal.ZERO;
+    }
+
+    public String getSellerDisplayName() {
+        return seller.getDisplayName();
     }
 }

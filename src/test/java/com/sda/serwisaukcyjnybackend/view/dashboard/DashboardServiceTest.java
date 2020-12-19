@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +32,7 @@ class DashboardServiceTest {
         //given
         dashboardService.limit = 10;
         when(this.auctionRepository.findAllByStatusNotOrderByStartDateTimeDesc(
-                AuctionStatus.ENDED, PageRequest.of(0, 10)
+                any(), any()
         )).thenReturn(new ArrayList<>());
         //when
         List<SimpleAuctionDTO> result =
@@ -53,7 +54,7 @@ class DashboardServiceTest {
         auctions.add(sampleAuction);
         dashboardService.limit = 10;
         when(this.auctionRepository.findAllByStatusNotOrderByStartDateTimeDesc(
-                AuctionStatus.ENDED, PageRequest.of(0, 10)
+                any(), any()
         )).thenReturn(auctions);
         //when
         List<SimpleAuctionDTO> result =
