@@ -10,7 +10,7 @@ public class BuyNowPurchase {
     String sellerEmail;
     String buyerEmail;
     String sellerName;
-    String BuyerName;
+    String buyerName;
     Long auctionId;
     String auctionTitle;
     BigDecimal price;

@@ -35,7 +35,7 @@ public class FinishAuctionCommandHandler implements CommandHandler<FinishAuction
         Preconditions.checkArgument(auction.getStatus() == AuctionStatus.ENDED,
                 "Auction %d not ended", auction.getId());
         if (isAnyBid(auction)) {
-            createPurchase(auction, command.getIsBuyNow());
+            createPurchase(auction);
         }
         if (auction.getIsPromoted()) {
             decrementUserPromotedAuctionsCount(auction.getSeller());
@@ -57,10 +57,10 @@ public class FinishAuctionCommandHandler implements CommandHandler<FinishAuction
         }
     }
 
-    private void createPurchase(Auction auction, Boolean isBuyNow) {
+    private void createPurchase(Auction auction) {
         var maxBid = bidRepository.getByAuctionAndBidPrice(auction, auction.getMaxBid());
 
-        var purchase = new Purchase(auction, maxBid, isBuyNow);
+        var purchase = new Purchase(auction, maxBid, Boolean.FALSE);
         purchaseRepository.save(purchase);
     }
 

@@ -24,6 +24,6 @@ public class AuctionFinisherScheduler {
         List<Auction> auctionsToFinish =
                 this.auctionRepository.findAllByStatusAndEndDateTimeBefore(AuctionStatus.STARTED, LocalDateTime.now());
         log.info("SCHEDULED CHECK FOR EXPIRED AUCTIONS - found {} auctions to finish", auctionsToFinish.size());
-        auctionsToFinish.forEach(auction -> commandDispatcher.handle(new FinishAuctionCommand(auction.getId(), Boolean.FALSE)));
+        auctionsToFinish.forEach(auction -> commandDispatcher.handle(new FinishAuctionCommand(auction.getId())));
     }
 }

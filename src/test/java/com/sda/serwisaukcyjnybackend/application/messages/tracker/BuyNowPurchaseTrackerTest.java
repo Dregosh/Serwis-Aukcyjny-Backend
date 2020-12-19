@@ -26,8 +26,10 @@ class BuyNowPurchaseTrackerTest {
         //given
         BuyNowPurchase event = new BuyNowPurchase(
                 1L,
-                "test@test",
+                "seller@test",
+                "buyer@test",
                 "seller's name",
+                "buyer's name",
                 1L,
                 "auction title",
                 BigDecimal.ONE
