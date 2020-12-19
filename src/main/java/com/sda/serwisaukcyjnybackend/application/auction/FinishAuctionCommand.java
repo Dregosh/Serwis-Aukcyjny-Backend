@@ -6,4 +6,5 @@ import lombok.Value;
 @Value
 public class FinishAuctionCommand implements Command<Void> {
     Long auctionId;
+    Boolean isBuyNow;
 }
