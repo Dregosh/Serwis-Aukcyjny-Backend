@@ -15,7 +15,7 @@ public class MessageCleaner {
 
     @Scheduled(cron = "${app.message.cleanCron}")
     public void cleanOldMessages() {
-        var messages = messageRepository.findAllByMessageStatus(MessageStatus.SEND);
+        var messages = messageRepository.findAllByMessageStatus(MessageStatus.SENT);
         log.info("START DELETING MESSAGES - found {} messages to delete", messages.size());
         messageRepository.deleteAll(messages);
     }

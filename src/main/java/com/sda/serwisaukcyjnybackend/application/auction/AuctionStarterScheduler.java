@@ -19,9 +19,9 @@ public class AuctionStarterScheduler {
 
     @Scheduled(cron = "${app.auction.expiredCheckCron}")
     public void checkForExpiredAuctions() {
-        List<Auction> auctionsToFinish = this.auctionRepository.findAllByStatusAndStartDateTimeBefore(AuctionStatus.CREATED, LocalDateTime.now());
-        log.info("SCHEDULED CHECK FOR AUCTIONS TO START - found {} auctions to finish", auctionsToFinish.size());
-        auctionsToFinish.forEach(this::startAuction);
+        List<Auction> auctionsToStart = this.auctionRepository.findAllByStatusAndStartDateTimeBefore(AuctionStatus.CREATED, LocalDateTime.now());
+        log.info("SCHEDULED CHECK FOR AUCTIONS TO START - found {} auctions to start", auctionsToStart.size());
+        auctionsToStart.forEach(this::startAuction);
     }
 
     private void startAuction(Auction auction) {

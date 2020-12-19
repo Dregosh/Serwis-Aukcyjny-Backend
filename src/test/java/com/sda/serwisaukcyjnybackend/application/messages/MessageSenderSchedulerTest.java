@@ -67,7 +67,7 @@ class MessageSenderSchedulerTest {
 
     private static Stream<Arguments> provideValues() {
         return Stream.of(
-                Arguments.of(0, false, MessageStatus.SEND),
+                Arguments.of(0, false, MessageStatus.SENT),
                 Arguments.of(0, true, MessageStatus.CREATED),
                 Arguments.of(2, true, MessageStatus.CANCELLED)
         );
