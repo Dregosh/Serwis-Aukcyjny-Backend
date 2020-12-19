@@ -2,8 +2,8 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 
 import com.sda.serwisaukcyjnybackend.application.auction.BidAuctionCommand;
 import com.sda.serwisaukcyjnybackend.application.auction.AddPhotosToAuctionCommand;
+import com.sda.serwisaukcyjnybackend.application.auction.BuyNowCommand;
 import com.sda.serwisaukcyjnybackend.application.auction.CreateAuctionCommand;
-import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +37,11 @@ public class AuctionController {
     public void addPhotoToAuction(@PathVariable(name = "auctionId") Long auctionId,
                                   @RequestParam MultipartFile[] files) {
         commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, files));
+    }
+
+    @PostMapping("/{auctionId}/buy-now")
+    public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId,
+                              @AuthenticationPrincipal SAUserDetails userDetails) {
+        commandDispatcher.handle(new BuyNowCommand(auctionId, userDetails.getUserId()));
     }
 }

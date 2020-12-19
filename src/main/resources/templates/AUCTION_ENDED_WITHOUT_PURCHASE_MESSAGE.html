@@ -15,13 +15,13 @@
 <table width="100%" cellpadding="0" cellspacing="0" bgcolor="0095cc">
     <tr>
         <td height="50" align="center" colspan="2">
-            <p>Zakup przez Kup teraz</p>
+            <p>Aukcja zakończona</p>
         </td>
     </tr>
     <tr bgcolor="ffffff">
         <td height="75" align="center">
             <h1>
-                Kupiłeś przedmiot przez Kup teraz
+                Nie było żadnych ofert zakupu
             </h1>
         </td>
     </tr>
@@ -30,27 +30,6 @@
             <h2>
                 Aukcja: <a th:href="${auctionUrl}"><span th:text="${auctionTitle}">auctionTitle</span></a>
             </h2>
-        </td>
-    </tr>
-    <tr bgcolor="ffffff">
-        <td height="75" align="center">
-            <h3>
-                Cena: <span th:text="${price}">price</span>
-            </h3>
-        </td>
-    </tr>
-    <tr bgcolor="ffffff">
-        <td height="75" align="center">
-            <h3>
-                Sprzedający: <span th:text="${otherPartyName}">otherPartyName</span>
-            </h3>
-        </td>
-    </tr>
-    <tr bgcolor="ffffff">
-        <td height="75" align="center">
-            <h3>
-                <a th:href="${purchaseUrl}">Kliknij tu aby przejść do szczegółów zakupu.</a>
-            </h3>
         </td>
     </tr>
 </table>

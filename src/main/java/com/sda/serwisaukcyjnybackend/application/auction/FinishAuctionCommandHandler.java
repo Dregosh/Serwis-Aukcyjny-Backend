@@ -60,7 +60,7 @@ public class FinishAuctionCommandHandler implements CommandHandler<FinishAuction
     private void createPurchase(Auction auction) {
         var maxBid = bidRepository.getByAuctionAndBidPrice(auction, auction.getMaxBid());
 
-        var purchase = new Purchase(auction, maxBid);
+        var purchase = new Purchase(auction, maxBid, Boolean.FALSE);
         purchaseRepository.save(purchase);
     }
 

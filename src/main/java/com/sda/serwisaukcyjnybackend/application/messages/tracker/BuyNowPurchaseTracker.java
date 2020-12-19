@@ -18,7 +18,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class BuyNowPurchaseTracker {
 
-    private static final String SELLER_NAME = "sellerName";
+    private static final String OTHER_PARTY_NAME = "otherPartyName";
     private static final String AUCTION_TITLE = "auctionTitle";
     private static final String PRICE = "price";
     private static final String AUCTION_URL = "auctionUrl";
@@ -33,18 +33,31 @@ public class BuyNowPurchaseTracker {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional
     public void trackEvent(BuyNowPurchase event) {
-        var buyerMessage = createBuyerMessage(event);
+        Message buyerMessage = createBuyerMessage(event);
         messageRepository.save(buyerMessage);
+        Message sellerMessage = createSellerMessage(event);
+        messageRepository.save(sellerMessage);
     }
 
     private Message createBuyerMessage(BuyNowPurchase event) {
+        HashMap<String, Object> payload = createCommonPayload(event);
+        payload.put(OTHER_PARTY_NAME, event.getSellerName());
+        return new Message(payload, MessageType.BUY_NOW_PURCHASED_MESSAGE, event.getBuyerEmail());
+    }
+
+    private Message createSellerMessage(BuyNowPurchase event) {
+        HashMap<String, Object> payload = createCommonPayload(event);
+        payload.put(OTHER_PARTY_NAME, event.getBuyerName());
+        return new Message(payload, MessageType.BUY_NOW_SOLD_MESSAGE, event.getSellerEmail());
+    }
+
+    private HashMap<String, Object> createCommonPayload(BuyNowPurchase event) {
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put(SELLER_NAME, event.getSellerName());
         payload.put(AUCTION_TITLE, event.getAuctionTitle());
         payload.put(PRICE, event.getPrice());
         payload.put(AUCTION_URL, guiUrl + "/auction/" + event.getAuctionId());
-        payload.put(PURCHASE_URL, guiUrl + "/purchase/" + event.getId());
-        return new Message(payload, MessageType.BUY_NOW_PURCHASED_MESSAGE, event.getBuyerEmail());
+        payload.put(PURCHASE_URL, guiUrl + "/purchase/" + event.getPurchaseId());
+        return payload;
     }
 
 }

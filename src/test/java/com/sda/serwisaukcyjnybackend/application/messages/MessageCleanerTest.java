@@ -27,7 +27,7 @@ class MessageCleanerTest {
     void shouldCleanMessages() {
         //given
         var message = new Message();
-        when(messageRepository.findAllByMessageStatus(MessageStatus.SEND)).thenReturn(List.of(message));
+        when(messageRepository.findAllByMessageStatus(MessageStatus.SENT)).thenReturn(List.of(message));
         doNothing().when(messageRepository).deleteAll(anyCollection());
 
         //when && then

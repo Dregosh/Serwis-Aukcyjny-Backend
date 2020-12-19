@@ -35,7 +35,7 @@ public class MessageSenderScheduler {
             context.setVariables(message.getPayload());
             String content = templateEngine.process(message.getMessageType().name(), context);
             mailSender.sendMail(message.getEmail(), message.getMessageType().getSubject(), content);
-            message.setMessageStatus(MessageStatus.SEND);
+            message.setMessageStatus(MessageStatus.SENT);
         } catch (Exception e) {
             if (message.getSendTries().equals(maxTries)) {
                 message.setMessageStatus(MessageStatus.CANCELLED);
