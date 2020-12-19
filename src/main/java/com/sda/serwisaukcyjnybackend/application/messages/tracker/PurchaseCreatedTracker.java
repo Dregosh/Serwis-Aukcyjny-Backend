@@ -42,7 +42,7 @@ public class PurchaseCreatedTracker {
     private Message createBuyerMessage(PurchaseCreated event) {
         HashMap<String, Object> payload = createCommonPayload(event);
         payload.put(OTHER_PARTY_NAME, event.getSellerName());
-        return new Message(payload, MessageType.BUY_NOW_PURCHASED_MESSAGE, event.getBuyerEmail());
+        return new Message(payload, getBuyerMessageType(event.getIsBuyNow()), event.getBuyerEmail());
     }
 
     private Message createSellerMessage(PurchaseCreated event) {
@@ -58,6 +58,14 @@ public class PurchaseCreatedTracker {
         payload.put(AUCTION_URL, guiUrl + "/auction/" + event.getAuctionId());
         payload.put(PURCHASE_URL, guiUrl + "/purchase/" + event.getPurchaseId());
         return payload;
+    }
+
+    private MessageType getBuyerMessageType(Boolean isBuyNow) {
+        if (isBuyNow) {
+            return MessageType.BUY_NOW_PURCHASED_MESSAGE;
+        } else {
+            return MessageType.BID_PURCHASED_MESSAGE;
+        }
     }
 
     private MessageType getSellerMessageType(Boolean isBuyNow) {
