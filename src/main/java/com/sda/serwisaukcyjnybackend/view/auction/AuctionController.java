@@ -1,9 +1,6 @@
 package com.sda.serwisaukcyjnybackend.view.auction;
 
-import com.sda.serwisaukcyjnybackend.application.auction.BidAuctionCommand;
-import com.sda.serwisaukcyjnybackend.application.auction.AddPhotosToAuctionCommand;
-import com.sda.serwisaukcyjnybackend.application.auction.BuyNowCommand;
-import com.sda.serwisaukcyjnybackend.application.auction.CreateAuctionCommand;
+import com.sda.serwisaukcyjnybackend.application.auction.*;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
 import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
@@ -50,6 +47,18 @@ public class AuctionController {
     public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId,
                               @AuthenticationPrincipal SAUserDetails userDetails) {
         commandDispatcher.handle(new BuyNowCommand(auctionId, userDetails.getUserId()));
+    }
+
+    @PostMapping("/{auctionId}/observe")
+    public void observeAuction(@PathVariable(name = "auctionId") Long auctionId,
+                               @AuthenticationPrincipal SAUserDetails userDetails) {
+        commandDispatcher.handle(new ObserveAuctionCommand(auctionId, userDetails.getUserId()));
+    }
+
+    @PostMapping("/{auctionId}/stop-observing")
+    public void stopObservingAuction(@PathVariable(name = "auctionId") Long auctionId,
+                                     @RequestBody @Valid StopObservingAuctionCommand stopObservingAuctionCommand) {
+        commandDispatcher.handle(stopObservingAuctionCommand.withUserId(getLoggedUser().getUserId()));
     }
 
     @GetMapping("/byCategory/{categoryId}")
