@@ -19,7 +19,8 @@ import java.util.Map;
 public class AuctionSpecification implements Specification<Auction> {
     private static final String MAX_BID_PRICE = "maxBid";
     private static final String BUY_NOW_PRICE = "buyNowPrice";
-    private static final String CATEGORY = "category.id";
+    private static final String CATEGORY = "category";
+    private static final String CATEGORY_ID = "id";
     private static final String PROMOTED = "isPromoted";
     private static final String STATUS = "status";
 
@@ -93,7 +94,7 @@ public class AuctionSpecification implements Specification<Auction> {
         if (categoryId == null) {
             return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         }
-        return criteriaBuilder.equal(root.get(CATEGORY), categoryId);
+        return criteriaBuilder.equal(root.get(CATEGORY).get(CATEGORY_ID), categoryId);
     }
 
     public AuctionSpecification(BigDecimal buyNowPriceFrom, BigDecimal buyNowPriceTo,
