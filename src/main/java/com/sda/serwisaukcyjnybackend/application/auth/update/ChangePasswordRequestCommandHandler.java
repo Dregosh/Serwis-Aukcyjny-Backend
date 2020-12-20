@@ -8,40 +8,36 @@ import com.sda.serwisaukcyjnybackend.domain.user.User;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import com.sda.serwisaukcyjnybackend.domain.user.VerificationCode;
 import com.sda.serwisaukcyjnybackend.domain.user.VerificationCodeRepository;
-import com.sda.serwisaukcyjnybackend.domain.user.event.UpdateEmailRequested;
+import com.sda.serwisaukcyjnybackend.domain.user.event.ChangePasswordRequested;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 @Component
 @RequiredArgsConstructor
-public class UpdateEmailRequestCommandHandler
-        implements CommandHandler<UpdateEmailRequestCommand, Void> {
-
+public class ChangePasswordRequestCommandHandler
+        implements CommandHandler<ChangePasswordRequestCommand, Void> {
     private final UserRepository userRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
-    public CommandResult<Void> handle(@Valid UpdateEmailRequestCommand command) {
-        User user = this.userRepository
-                .findById(AuthenticatedService.getLoggedUser().getUserId()).orElseThrow();
+    public CommandResult<Void> handle(@Valid ChangePasswordRequestCommand command) {
+        Long loggedUserId = AuthenticatedService.getLoggedUser().getUserId();
+        User user = this.userRepository.findById(loggedUserId).orElseThrow();
         VerificationCode verificationCode = new VerificationCode(user);
-        verificationCode.setRelatedEmail(command.getNewEmail());
-        verificationCodeRepository.save(verificationCode);
-        eventPublisher.publishEvent(new UpdateEmailRequested(user.getDisplayName(),
-                                                             verificationCode.getCode(),
-                                                             command.getNewEmail()));
+        this.verificationCodeRepository.save(verificationCode);
+        eventPublisher.publishEvent(new ChangePasswordRequested(
+                user.getDisplayName(), verificationCode.getCode(), user.getEmail()));
         return CommandResult.ok();
     }
 
     @Override
     public Class<? extends Command<Void>> commandClass() {
-        return UpdateEmailRequestCommand.class;
+        return ChangePasswordRequestCommand.class;
     }
 }

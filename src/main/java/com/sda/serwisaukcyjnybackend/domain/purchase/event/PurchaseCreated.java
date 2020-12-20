@@ -5,7 +5,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-public class BuyNowPurchase {
+public class PurchaseCreated {
     Long purchaseId;
     String sellerEmail;
     String buyerEmail;
@@ -14,4 +14,5 @@ public class BuyNowPurchase {
     Long auctionId;
     String auctionTitle;
     BigDecimal price;
+    Boolean isBuyNow;
 }

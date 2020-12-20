@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +28,8 @@ public class AuctionDTO implements Serializable {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private AuctionStatus status;
+    private boolean observed;
+    private boolean premium;
+    private boolean userAuction;
+    private List<String> photoNames;
 }

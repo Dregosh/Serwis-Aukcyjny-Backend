@@ -76,7 +76,7 @@ public class KeycloakService {
     }
 
     private UserRepresentation getByEmail(String email) {
-        return keycloak.realm(keycloakProperties.getRealm()).users().search(email).get(0);
+        return keycloak.realm(keycloakProperties.getRealm()).users()
+                       .search(email, 0, 1).get(0);
     }
-
 }
