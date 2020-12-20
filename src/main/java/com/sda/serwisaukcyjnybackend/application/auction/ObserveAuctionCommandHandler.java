@@ -13,6 +13,7 @@ import com.sda.serwisaukcyjnybackend.domain.user.User;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 
@@ -25,6 +26,7 @@ public class ObserveAuctionCommandHandler implements CommandHandler<ObserveAucti
 
 
     @Override
+    @Transactional
     public CommandResult<Void> handle(@Valid ObserveAuctionCommand command) {
         Auction auction = auctionRepository.getOne(command.getAuctionId());
         User user = userRepository.getOne(command.getUserId());
@@ -39,15 +41,13 @@ public class ObserveAuctionCommandHandler implements CommandHandler<ObserveAucti
 
     private void checkIfOwnAuction(Long userId, Auction auction) {
         if (auction.getSellerId().equals(userId)) {
-            String cause = "own auction";
-            throw new CannotObserveAuctionException(auction.getId(), cause);
+            throw new CannotObserveAuctionException(auction.getId(), "own auction");
         }
     }
 
     private void checkIfAuctionEnded(Auction auction) {
         if (auction.getStatus().equals(AuctionStatus.ENDED)) {
-            String cause = "auction has ended";
-            throw new CannotObserveAuctionException(auction.getId(), cause);
+            throw new CannotObserveAuctionException(auction.getId(), "auction has ended");
         }
     }
 
