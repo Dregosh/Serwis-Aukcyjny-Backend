@@ -3,6 +3,7 @@ package com.sda.serwisaukcyjnybackend.domain.auction.specification;
 import com.google.common.base.Preconditions;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
+import com.sda.serwisaukcyjnybackend.view.auction.AuctionFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Builder
 public class AuctionSpecification implements Specification<Auction> {
@@ -107,5 +109,31 @@ public class AuctionSpecification implements Specification<Auction> {
         this.onlyBuyNow = onlyBuyNow;
         this.onlyCanBid = onlyCanBid;
         this.categoryId = categoryId;
+    }
+
+    public static AuctionSpecificationBuilder getFromAuctionFilterMap(Map<AuctionFilter, ?> filterMap) {
+        var builder = builder();
+        if (filterMap.containsKey(AuctionFilter.BID_PRICE_TO)) {
+            builder.bidPriceTo((BigDecimal) filterMap.get(AuctionFilter.BID_PRICE_TO));
+        }
+        if (filterMap.containsKey(AuctionFilter.BID_PRICE_FROM)) {
+            builder.bidPriceFrom((BigDecimal) filterMap.get(AuctionFilter.BID_PRICE_FROM));
+        }
+        if (filterMap.containsKey(AuctionFilter.BUY_NOW_PRICE_TO)) {
+            builder.buyNowPriceTo((BigDecimal) filterMap.get(AuctionFilter.BUY_NOW_PRICE_TO));
+        }
+        if (filterMap.containsKey(AuctionFilter.BUY_NOW_PRICE_FROM)) {
+            builder.buyNowPriceFrom((BigDecimal) filterMap.get(AuctionFilter.BUY_NOW_PRICE_FROM));
+        }
+        if (filterMap.containsKey(AuctionFilter.ONLY_PROMOTED)) {
+            builder.onlyPromoted(true);
+        }
+        if (filterMap.containsKey(AuctionFilter.ONLY_BUY_NOW)) {
+            builder.onlyBuyNow(true);
+        }
+        if (filterMap.containsKey(AuctionFilter.ONLY_CAN_BID)) {
+            builder.onlyCanBid(true);
+        }
+        return builder;
     }
 }
