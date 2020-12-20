@@ -6,9 +6,11 @@ import com.sda.serwisaukcyjnybackend.domain.message.MessageType;
 import com.sda.serwisaukcyjnybackend.domain.user.event.ChangePasswordRequested;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.HashMap;
 
@@ -24,14 +26,12 @@ public class ChangePasswordRequestedTracker {
     private String guiUrl;
 
     @Async
-    @EventListener
-    /*@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional*/
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional
     public void trackEvent(ChangePasswordRequested event) {
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put(CONFIRM_URL, guiUrl + "/passwordchange/" + event.getToken());
+        payload.put(CONFIRM_URL, guiUrl + "/auth/password-change/" + event.getToken());
         payload.put(DISPLAY_NAME, event.getDisplayName());
-
         Message message = new Message(payload,
                                       MessageType.CHANGE_PASSWORD_MESSAGE,
                                       event.getEmail());
