@@ -13,7 +13,7 @@ public class UserRepresentationMapper {
 
     public static UserRepresentation mapFromRegister(RegisterUserCommand registerUserCommand, Long userId) {
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(registerUserCommand.getEmail());
+        userRepresentation.setUsername(registerUserCommand.getDisplayName());
         userRepresentation.setEmail(registerUserCommand.getEmail());
         userRepresentation.setFirstName(registerUserCommand.getFirstName());
         userRepresentation.setLastName(registerUserCommand.getLastName());

@@ -1,4 +1,4 @@
-package com.sda.serwisaukcyjnybackend.view.edituser;
+package com.sda.serwisaukcyjnybackend.view.auth;
 
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.AllArgsConstructor;

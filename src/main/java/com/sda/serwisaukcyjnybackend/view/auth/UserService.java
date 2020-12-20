@@ -14,4 +14,9 @@ public class UserService {
                 userRepository.existsByEmail(email),
                 userRepository.existsByDisplayName(displayName));
     }
+
+    public EditUserDTO getEditUserData(Long userId) {
+        return EditUserMapper.mapToEditUserDTO(
+                this.userRepository.findById(userId).orElseThrow());
+    }
 }

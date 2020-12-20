@@ -1,7 +1,8 @@
-package com.sda.serwisaukcyjnybackend.view.edituser;
+package com.sda.serwisaukcyjnybackend.view.auth;
 
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
+import com.sda.serwisaukcyjnybackend.view.auth.EditUserDTO;
 
 public class EditUserMapper {
 
