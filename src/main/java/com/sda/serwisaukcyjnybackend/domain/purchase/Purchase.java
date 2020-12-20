@@ -56,6 +56,10 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
         this.isBuyNow = isBuyNow;
     }
 
+    public Long getBuyerId() {
+        return this.getBuyer().getId();
+    }
+
     @PostPersist
     private void informAboutPurchase() {
             registerEvent(new PurchaseCreated(id,

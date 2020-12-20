@@ -38,4 +38,8 @@ public class Rating {
 
     @Column(name = "buyers_rating_date")
     private LocalDateTime buyersRatingDate;
+
+    public Rating(Purchase purchase) {
+        this.purchase = purchase;
+    }
 }
