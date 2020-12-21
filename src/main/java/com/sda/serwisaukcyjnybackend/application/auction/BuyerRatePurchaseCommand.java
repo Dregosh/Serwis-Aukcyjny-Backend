@@ -13,6 +13,7 @@ public class BuyerRatePurchaseCommand implements Command<Void> {
     Long purchaseId;
     @With
     Long userId;
+    @NotNull
     Integer buyersRating;
     String buyersComment;
 }
