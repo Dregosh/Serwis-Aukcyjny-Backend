@@ -38,7 +38,8 @@ public class AuctionSpecification implements Specification<Auction> {
     public Predicate toPredicate(Root<Auction> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.and(buyNowPriceFrom(root, criteriaBuilder), buyNowPriceTo(root, criteriaBuilder),
                 bidPriceFrom(root, criteriaBuilder), bidPriceTo(root, criteriaBuilder), onlyPromoted(root, criteriaBuilder),
-                onlyBuyNow(root, criteriaBuilder), byCategory(root, criteriaBuilder), onlyBid(root, criteriaBuilder));
+                onlyBuyNow(root, criteriaBuilder), byCategory(root, criteriaBuilder), onlyBid(root, criteriaBuilder),
+                notEnded(root, criteriaBuilder));
     }
 
     private Predicate buyNowPriceFrom(Root<Auction> root, CriteriaBuilder criteriaBuilder) {
@@ -96,6 +97,9 @@ public class AuctionSpecification implements Specification<Auction> {
         }
         return criteriaBuilder.equal(root.get(CATEGORY).get(CATEGORY_ID), categoryId);
     }
+    private Predicate notEnded(Root<Auction> root, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.notEqual(root.get(STATUS), AuctionStatus.ENDED);
+    }
 
     public AuctionSpecification(BigDecimal buyNowPriceFrom, BigDecimal buyNowPriceTo,
                                 BigDecimal bidPriceFrom, BigDecimal bidPriceTo,
@@ -112,19 +116,20 @@ public class AuctionSpecification implements Specification<Auction> {
         this.categoryId = categoryId;
     }
 
-    public static AuctionSpecificationBuilder getFromAuctionFilterMap(Map<AuctionFilter, ?> filterMap) {
+    public static AuctionSpecificationBuilder getFromAuctionFilterMap(Map<String, String> stringMap) {
+        var filterMap = AuctionFilter.mapToFilterAuctionMap(stringMap);
         var builder = builder();
         if (filterMap.containsKey(AuctionFilter.BID_PRICE_TO)) {
-            builder.bidPriceTo((BigDecimal) filterMap.get(AuctionFilter.BID_PRICE_TO));
+            builder.bidPriceTo(new BigDecimal(filterMap.get(AuctionFilter.BID_PRICE_TO)));
         }
         if (filterMap.containsKey(AuctionFilter.BID_PRICE_FROM)) {
-            builder.bidPriceFrom((BigDecimal) filterMap.get(AuctionFilter.BID_PRICE_FROM));
+            builder.bidPriceFrom(new BigDecimal(filterMap.get(AuctionFilter.BID_PRICE_FROM)));
         }
         if (filterMap.containsKey(AuctionFilter.BUY_NOW_PRICE_TO)) {
-            builder.buyNowPriceTo((BigDecimal) filterMap.get(AuctionFilter.BUY_NOW_PRICE_TO));
+            builder.buyNowPriceTo(new BigDecimal(filterMap.get(AuctionFilter.BUY_NOW_PRICE_TO)));
         }
         if (filterMap.containsKey(AuctionFilter.BUY_NOW_PRICE_FROM)) {
-            builder.buyNowPriceFrom((BigDecimal) filterMap.get(AuctionFilter.BUY_NOW_PRICE_FROM));
+            builder.buyNowPriceFrom(new BigDecimal(filterMap.get(AuctionFilter.BUY_NOW_PRICE_FROM)));
         }
         if (filterMap.containsKey(AuctionFilter.ONLY_PROMOTED)) {
             builder.onlyPromoted(true);

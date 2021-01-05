@@ -1,14 +1,12 @@
 package com.sda.serwisaukcyjnybackend.view.auction;
 
 import com.sda.serwisaukcyjnybackend.application.auction.*;
+import com.sda.serwisaukcyjnybackend.application.auction.exception.AuctionNotFoundException;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
-import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
-import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +24,11 @@ public class AuctionController {
     private final CommandDispatcher commandDispatcher;
     private final AuctionService auctionService;
 
+    @ExceptionHandler(AuctionNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNotFound() {
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createAuction(@RequestBody @Valid CreateAuctionCommand createAuctionCommand) {
@@ -40,19 +43,17 @@ public class AuctionController {
     @PostMapping("/{auctionId}/images")
     public void addPhotoToAuction(@PathVariable(name = "auctionId") Long auctionId,
                                   @RequestParam MultipartFile[] files) {
-        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, files));
+        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, getLoggedUser().getUserId(), files));
     }
 
     @PostMapping("/{auctionId}/buy-now")
-    public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId,
-                              @AuthenticationPrincipal SAUserDetails userDetails) {
-        commandDispatcher.handle(new BuyNowCommand(auctionId, userDetails.getUserId()));
+    public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId) {
+        commandDispatcher.handle(new BuyNowCommand(auctionId, getLoggedUser().getUserId()));
     }
 
     @PostMapping("/{auctionId}/observe")
-    public void observeAuction(@PathVariable(name = "auctionId") Long auctionId,
-                               @AuthenticationPrincipal SAUserDetails userDetails) {
-        commandDispatcher.handle(new ObserveAuctionCommand(auctionId, userDetails.getUserId()));
+    public void observeAuction(@PathVariable(name = "auctionId") Long auctionId) {
+        commandDispatcher.handle(new ObserveAuctionCommand(auctionId, getLoggedUser().getUserId()));
     }
 
     @PostMapping("/{auctionId}/stop-observing")
@@ -66,7 +67,7 @@ public class AuctionController {
                                                 @RequestParam("page") int page,
                                                 @RequestParam("size") int size,
                                                 @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort,
-                                                @RequestParam Map<AuctionFilter, ?> filterMap) {
+                                                @RequestParam Map<String, String> filterMap) {
         return auctionService.getSortedAuctionByCategory(categoryId, page, size, sort, filterMap);
     }
 

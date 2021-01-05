@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class AuctionService {
     }
 
     public Page<SimpleAuctionDTO> getSortedAuctionByCategory(Long categoryId, int page, int size,
-                                                             AuctionSort sort, Map<AuctionFilter, ?> filterMap) {
+                                                             AuctionSort sort, Map<String, String> filterMap) {
         Pageable pageable = PageRequest.of(page, size, createSort(sort));
         var specification = AuctionSpecification.getFromAuctionFilterMap(filterMap)
                 .categoryId(categoryId)
