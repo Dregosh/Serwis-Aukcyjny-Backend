@@ -74,8 +74,8 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
     Auction getOne(@Param("id") Long id);
 
     @Query("select a from Auction a " +
-           "where a.id = :id and a.seller.id = :sellerId")
+            "where a.id = :id and a.seller.id = :sellerId")
     Optional<Auction> findAuctionByIdAndSellerId(@Param("id") Long auctionId,
-                                                 @Param("sellerId") Long sellerId);
+                                                  @Param("sellerId") Long sellerId);
 
 }

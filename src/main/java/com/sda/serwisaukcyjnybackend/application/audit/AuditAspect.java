@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResultType;
+import com.sda.serwisaukcyjnybackend.config.app.DefaultObjectMapper;
 import com.sda.serwisaukcyjnybackend.domain.audit.AuditEntry;
 import com.sda.serwisaukcyjnybackend.domain.audit.AuditResult;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class AuditAspect {
     private final AuditLogger auditLogger;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = DefaultObjectMapper.getInstance();
 
     @Around("execution(* com.sda.serwisaukcyjnybackend.application.command.CommandHandler.handle(..)) && args(command)")
     public Object log(ProceedingJoinPoint joinPoint, Command command) throws Throwable {

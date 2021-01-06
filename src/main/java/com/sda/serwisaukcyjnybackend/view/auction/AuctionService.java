@@ -15,10 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,15 +32,13 @@ public class AuctionService {
 
     public AuctionDTO getAuctionById(Long auctionId) {
         boolean observed = AuthenticatedService.getLoggedUserInfo()
-                                               .map(userDetails -> observationRepository
-                                                       .existsByAuction_IdAndAndUser_Id(auctionId,
-                                                                                        userDetails
-                                                                                                .getUserId()))
-                                               .orElse(false);
+                .map(userDetails -> observationRepository.existsByAuction_IdAndAndUser_Id(auctionId, userDetails.getUserId()))
+                .orElse(false);
         return AuctionMapper.map(auctionRepository.getById(auctionId), observed);
     }
 
     public Page<SimpleAuctionDTO> getSortedAuctionByCategory(Long categoryId, int page, int size,
+                                                             AuctionSort sort, Map<String, String> filterMap) {
                                                              AuctionSort sort,
                                                              Map<AuctionFilter, ?> filterMap) {
         Pageable pageable = PageRequest.of(page, size, createSort(sort));
@@ -76,13 +70,13 @@ public class AuctionService {
 
     public List<SimpleAuctionDTO> getObserved(Long userId) {
         return auctionRepository.findAllObserved(userId)
-                                .stream().map(AuctionMapper::mapToSimpleAuction)
-                                .collect(Collectors.toList());
+                .stream().map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
     }
 
     public List<SimpleAuctionDTO> getBidded(Long userId) {
         return auctionRepository.findAllBidded(userId)
-                                .stream().map(AuctionMapper::mapToSimpleAuction)
-                                .collect(Collectors.toList());
+                .stream().map(AuctionMapper::mapToSimpleAuction)
+                .collect(Collectors.toList());
     }
 }

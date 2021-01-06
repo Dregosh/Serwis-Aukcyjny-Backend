@@ -26,7 +26,11 @@ import java.util.List;
 @Getter
 @Setter
 @NamedEntityGraph(name = "auction-photos", attributeNodes = {
-        @NamedAttributeNode("photos")
+        @NamedAttributeNode("photos"),
+})
+@NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
+        @NamedAttributeNode("photos"),
+        @NamedAttributeNode("seller")
 })
 @NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
         @NamedAttributeNode("photos"),
