@@ -3,6 +3,8 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 import com.sda.serwisaukcyjnybackend.application.auction.*;
 import com.sda.serwisaukcyjnybackend.application.auction.exception.AuctionNotFoundException;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
+import com.sda.serwisaukcyjnybackend.view.auth.CreateAuctionUserDTO;
+import com.sda.serwisaukcyjnybackend.view.auth.UserService;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedServic
 public class AuctionController {
     private final CommandDispatcher commandDispatcher;
     private final AuctionService auctionService;
+    private final UserService userService;
 
     @ExceptionHandler(AuctionNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -41,8 +44,8 @@ public class AuctionController {
 
     @PostMapping("/{auctionId}/images")
     public void addPhotoToAuction(@PathVariable(name = "auctionId") Long auctionId,
-                                  @RequestParam MultipartFile[] files) {
-        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, getLoggedUser().getUserId(), files));
+                                  @RequestParam MultipartFile file) {
+        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, getLoggedUser().getUserId(), file));
     }
 
     @PostMapping("/{auctionId}/buy-now")
@@ -97,5 +100,10 @@ public class AuctionController {
             @RequestParam Map<String, String> filterMap) {
         return auctionService.getUserAuctionsSorted(
                 getLoggedUser().getUserId(), page, size, sort, filterMap);
+    }
+
+    @GetMapping("/create-auction-data")
+    public CreateAuctionUserDTO getCreateAuctionUser() {
+        return userService.getCreateAuctionUserDTO(getLoggedUser().getUserId());
     }
 }

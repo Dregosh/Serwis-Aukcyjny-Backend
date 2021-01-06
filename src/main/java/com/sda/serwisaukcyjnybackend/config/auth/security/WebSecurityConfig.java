@@ -41,6 +41,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/api/auctions/bidded").authenticated()
                 .antMatchers("/api/auctions/observed").authenticated()
                 .antMatchers("/api/auctions/owned").authenticated()
+                .antMatchers("/api/auctions/create-auction-data").authenticated()
                 .anyRequest().permitAll()
                 .and().csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
