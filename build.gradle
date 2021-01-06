@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.jboss.resteasy:resteasy-client:4.5.5.Final'
     implementation 'org.jboss.resteasy:resteasy-jackson2-provider:4.5.5.Final'
     implementation 'org.keycloak:keycloak-spring-boot-starter'
+    implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
