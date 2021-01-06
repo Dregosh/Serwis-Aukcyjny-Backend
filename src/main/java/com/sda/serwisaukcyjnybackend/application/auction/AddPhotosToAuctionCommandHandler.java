@@ -36,12 +36,8 @@ public class AddPhotosToAuctionCommandHandler implements CommandHandler<AddPhoto
     public CommandResult<Void> handle(@Valid AddPhotosToAuctionCommand command) {
         var auction = auctionRepository.findAuctionByIdAndSellerId(command.getAuctionId(), command.getSellerId())
                 .orElseThrow(() -> new AuctionNotFoundException(command.getAuctionId(), command.getSellerId()));
-
-        List<Photo> photos = Arrays.stream(command.getPhotos())
-                .map(photo -> savePhotoInStorage(auction, photo))
-                .collect(Collectors.toList());
-
-        photoRepository.saveAll(photos);
+        var photo = savePhotoInStorage(auction, command.getImage());
+        photoRepository.save(photo);
 
         return CommandResult.ok();
     }

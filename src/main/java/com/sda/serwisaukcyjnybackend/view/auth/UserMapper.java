@@ -2,9 +2,8 @@ package com.sda.serwisaukcyjnybackend.view.auth;
 
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
-import com.sda.serwisaukcyjnybackend.view.auth.EditUserDTO;
 
-public class EditUserMapper {
+public class UserMapper {
 
     public static EditUserDTO mapToEditUserDTO(User user) {
         return EditUserDTO.builder()
@@ -21,4 +20,5 @@ public class EditUserMapper {
                           ))
                           .build();
     }
+
 }

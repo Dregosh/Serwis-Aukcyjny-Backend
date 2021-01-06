@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class AddPhotosToAuctionCommand implements Command<Void> {
     Long auctionId;
     Long sellerId;
-    MultipartFile[] photos;
+    MultipartFile image;
 }
