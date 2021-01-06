@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.view.auction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,13 @@ public class AuctionDTO implements Serializable {
     private BigDecimal maxBid;
     private boolean canBuyNow;
     private boolean canBid;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime startDateTime;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime endDateTime;
+
     private AuctionStatus status;
     private boolean observed;
     private boolean premium;

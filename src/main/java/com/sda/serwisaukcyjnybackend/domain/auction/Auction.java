@@ -28,6 +28,10 @@ import java.util.List;
 @NamedEntityGraph(name = "auction-photos", attributeNodes = {
         @NamedAttributeNode("photos")
 })
+@NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
+        @NamedAttributeNode("photos"),
+        @NamedAttributeNode("seller")
+})
 public class Auction extends AbstractAggregateRoot<Auction> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
