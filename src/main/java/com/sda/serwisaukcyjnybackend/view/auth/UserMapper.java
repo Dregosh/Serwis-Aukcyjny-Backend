@@ -1,24 +1,21 @@
 package com.sda.serwisaukcyjnybackend.view.auth;
 
-import com.sda.serwisaukcyjnybackend.domain.shared.Address;
+import com.sda.serwisaukcyjnybackend.domain.user.AccountType;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 
 public class UserMapper {
 
-    public static EditUserDTO mapToEditUserDTO(User user) {
+    public static EditUserDTO mapToEditUserDTO(User user, boolean canBuyPremiumAccount) {
         return EditUserDTO.builder()
-                          .email(user.getEmail())
-                          .displayName(user.getDisplayName())
-                          .firstName(user.getFirstName())
-                          .lastName(user.getLastName())
-                          .address(new Address(
-                                  user.getAddress().getCity(),
-                                  "województwo",
-                                  user.getAddress().getStreet(),
-                                  user.getAddress().getNumber(),
-                                  user.getAddress().getPostal()
-                          ))
-                          .build();
+                .email(user.getEmail())
+                .displayName(user.getDisplayName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .address(user.getAddress())
+                .canBuyPremiumAccount(canBuyPremiumAccount)
+                .premiumAccount(user.getAccountType() == AccountType.PREMIUM)
+                .premiumAccountExpiration(user.getPremiumAccountExpiration())
+                .build();
     }
 
 }

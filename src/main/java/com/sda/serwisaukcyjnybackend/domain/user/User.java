@@ -6,17 +6,20 @@ import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class User {
     @Id
@@ -44,6 +47,8 @@ public class User {
     private Long version;
     @Column(name = "promoted_auctions_count")
     private int promotedAuctionsCount;
+    @Column(name = "premium_account_expiration")
+    private LocalDate premiumAccountExpiration;
     @OneToMany(mappedBy = "buyer")
     private List<Purchase> purchases = new ArrayList<>();
     @OneToMany(mappedBy = "user")
@@ -78,5 +83,19 @@ public class User {
 
     public void removePromotedAuction() {
         this.promotedAuctionsCount--;
+    }
+
+    public void setPremiumAccount(int days) {
+        if (this.accountType == AccountType.PREMIUM) {
+            premiumAccountExpiration = premiumAccountExpiration.plusDays(days);
+        } else {
+            premiumAccountExpiration = LocalDate.now().plusDays(days);
+        }
+        this.accountType = AccountType.PREMIUM;
+    }
+
+    public void setNormalAccount() {
+        this.accountType = AccountType.NORMAL;
+        this.premiumAccountExpiration = null;
     }
 }

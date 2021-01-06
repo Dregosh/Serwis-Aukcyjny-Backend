@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.view.auth;
 
 import com.sda.serwisaukcyjnybackend.domain.category.CategoryRepository;
+import com.sda.serwisaukcyjnybackend.domain.user.PremiumOrderRepository;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import com.sda.serwisaukcyjnybackend.view.category.CategoryMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final PremiumOrderRepository premiumOrderRepository;
 
     @Value("${app.auction.maxPromoted}")
     protected int maxPromoted;
@@ -29,7 +31,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public EditUserDTO getEditUserData(Long userId) {
         return UserMapper.mapToEditUserDTO(
-                this.userRepository.findById(userId).orElseThrow());
+                this.userRepository.findById(userId).orElseThrow(),
+                !premiumOrderRepository.existsByUserId(userId));
     }
 
     @Transactional(readOnly = true)
