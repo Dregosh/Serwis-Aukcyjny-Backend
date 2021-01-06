@@ -30,7 +30,7 @@ public class WebSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         super.configure(http);
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/auctions").authenticated()
+//                .antMatchers(HttpMethod.POST, "/api/auctions").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/auctions/bid").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/auctions/*/images").authenticated()
                 .antMatchers("/api/auth/edit-user").authenticated()

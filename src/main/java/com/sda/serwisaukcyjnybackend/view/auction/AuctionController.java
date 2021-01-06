@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.util.List;
 import java.util.Map;
 
@@ -94,9 +93,17 @@ public class AuctionController {
         return auctionService.getUserAuction(getLoggedUser().getUserId());
     }
 
+    @GetMapping("/own-sorted")
+    public Page<SimpleAuctionDTO> getUserAuctionsSorted(
+            @RequestParam("page") int page, @RequestParam("size") int size,
+            @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort,
+            @RequestParam Map<String, String> filterMap) {
+        return auctionService.getUserAuctionsSorted(
+                getLoggedUser().getUserId(), page, size, sort, filterMap);
+    }
+
     @GetMapping("/create-auction-data")
     public CreateAuctionUserDTO getCreateAuctionUser() {
         return userService.getCreateAuctionUserDTO(getLoggedUser().getUserId());
     }
-
 }

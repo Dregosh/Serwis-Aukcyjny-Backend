@@ -12,7 +12,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +49,7 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
     @EntityGraph("auction-photos")
     List<Auction> findAllByStatusAndStartDateTimeBefore(AuctionStatus status, LocalDateTime now);
 
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-photos-seller")
     List<Auction> findAllBySeller_Id(Long sellerId);
 
     @EntityGraph("auction-photos")
@@ -66,8 +65,10 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
     @EntityGraph("auction-photos-seller")
     Auction getById(Long auctionId);
 
+    @Override
+    @NonNull
     @EntityGraph("auction-photos")
-    Page<Auction> findAll(@Nullable Specification<Auction> spec, Pageable pageable);
+    Page<Auction> findAll(@Nullable Specification<Auction> spec, @Nullable Pageable pageable);
 
     @Query("select a from Auction a where a.id = :id")
     Auction getOne(@Param("id") Long id);
