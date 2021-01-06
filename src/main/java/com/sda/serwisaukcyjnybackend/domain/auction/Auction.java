@@ -32,10 +32,6 @@ import java.util.List;
         @NamedAttributeNode("photos"),
         @NamedAttributeNode("seller")
 })
-@NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
-        @NamedAttributeNode("photos"),
-        @NamedAttributeNode("seller")
-})
 public class Auction extends AbstractAggregateRoot<Auction> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

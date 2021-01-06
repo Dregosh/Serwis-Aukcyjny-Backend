@@ -3,7 +3,6 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 import com.sda.serwisaukcyjnybackend.application.auction.*;
 import com.sda.serwisaukcyjnybackend.application.auction.exception.AuctionNotFoundException;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
-import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.util.List;
 import java.util.Map;
 
@@ -96,14 +94,8 @@ public class AuctionController {
     public Page<SimpleAuctionDTO> getUserAuctionsSorted(
             @RequestParam("page") int page, @RequestParam("size") int size,
             @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort,
-            @RequestParam Map<AuctionFilter, ?> filterMap) {
-        return auctionService.getUserAuctionsSorted(getLoggedUser().getUserId(),
-                                                    page, size, sort, filterMap);
+            @RequestParam Map<String, String> filterMap) {
+        return auctionService.getUserAuctionsSorted(
+                getLoggedUser().getUserId(), page, size, sort, filterMap);
     }
-
-   /* @GetMapping("/own-detailed")
-    public List<AuctionDTO> getUserAuctionsDetailedAndSorted(
-            @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort) {
-        return auctionService.getUserAuctionsDetailedAndSorted(getLoggedUser().getUserId(), sort);
-    }*/
 }
