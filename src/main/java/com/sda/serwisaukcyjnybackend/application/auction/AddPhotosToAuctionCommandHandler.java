@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
+import com.sda.serwisaukcyjnybackend.application.auction.exception.AuctionNotFoundException;
 import com.sda.serwisaukcyjnybackend.application.auction.exception.FileStorageException;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
@@ -33,13 +34,10 @@ public class AddPhotosToAuctionCommandHandler implements CommandHandler<AddPhoto
 
     @Override
     public CommandResult<Void> handle(@Valid AddPhotosToAuctionCommand command) {
-        var auction = auctionRepository.getOne(command.getAuctionId());
-
-        List<Photo> photos = Arrays.stream(command.getPhotos())
-                .map(photo -> savePhotoInStorage(auction, photo))
-                .collect(Collectors.toList());
-
-        photoRepository.saveAll(photos);
+        var auction = auctionRepository.findAuctionByIdAndSellerId(command.getAuctionId(), command.getSellerId())
+                .orElseThrow(() -> new AuctionNotFoundException(command.getAuctionId(), command.getSellerId()));
+        var photo = savePhotoInStorage(auction, command.getImage());
+        photoRepository.save(photo);
 
         return CommandResult.ok();
     }

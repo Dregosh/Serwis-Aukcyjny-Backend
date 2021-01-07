@@ -12,7 +12,5 @@ import javax.validation.constraints.Email;
 @Data
 public class UpdateEmailRequestCommand implements Command<Void> {
     @Email
-    private String oldEmail;
-    @Email
     private String newEmail;
 }

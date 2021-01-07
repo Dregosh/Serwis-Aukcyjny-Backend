@@ -2,18 +2,16 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 
 import com.sda.serwisaukcyjnybackend.application.auction.*;
 import com.sda.serwisaukcyjnybackend.application.command.CommandDispatcher;
-import com.sda.serwisaukcyjnybackend.config.auth.security.SAUserDetails;
-import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
+import com.sda.serwisaukcyjnybackend.view.auth.CreateAuctionUserDTO;
+import com.sda.serwisaukcyjnybackend.view.auth.UserService;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +23,12 @@ import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedServic
 public class AuctionController {
     private final CommandDispatcher commandDispatcher;
     private final AuctionService auctionService;
+    private final UserService userService;
+
+    @ExceptionHandler(AuctionNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNotFound() {
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,14 +43,24 @@ public class AuctionController {
 
     @PostMapping("/{auctionId}/images")
     public void addPhotoToAuction(@PathVariable(name = "auctionId") Long auctionId,
-                                  @RequestParam MultipartFile[] files) {
-        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, files));
+                                  @RequestParam MultipartFile file) {
+        commandDispatcher.handle(new AddPhotosToAuctionCommand(auctionId, getLoggedUser().getUserId(), file));
     }
 
     @PostMapping("/{auctionId}/buy-now")
-    public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId,
-                              @AuthenticationPrincipal SAUserDetails userDetails) {
-        commandDispatcher.handle(new BuyNowCommand(auctionId, userDetails.getUserId()));
+    public void buyNowAuction(@PathVariable(name = "auctionId") Long auctionId) {
+        commandDispatcher.handle(new BuyNowCommand(auctionId, getLoggedUser().getUserId()));
+    }
+
+    @PostMapping("/{auctionId}/observe")
+    public void observeAuction(@PathVariable(name = "auctionId") Long auctionId) {
+        commandDispatcher.handle(new ObserveAuctionCommand(auctionId, getLoggedUser().getUserId()));
+    }
+
+    @PostMapping("/{auctionId}/stop-observing")
+    public void stopObservingAuction(@PathVariable(name = "auctionId") Long auctionId,
+                                     @RequestBody @Valid StopObservingAuctionCommand stopObservingAuctionCommand) {
+        commandDispatcher.handle(stopObservingAuctionCommand.withUserId(getLoggedUser().getUserId()));
     }
 
     @PostMapping("/rate-buyer")
@@ -59,7 +73,7 @@ public class AuctionController {
                                                 @RequestParam("page") int page,
                                                 @RequestParam("size") int size,
                                                 @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort,
-                                                @RequestParam Map<AuctionFilter, ?> filterMap) {
+                                                @RequestParam Map<String, String> filterMap) {
         return auctionService.getSortedAuctionByCategory(categoryId, page, size, sort, filterMap);
     }
 
@@ -83,4 +97,17 @@ public class AuctionController {
         return auctionService.getUserAuction(getLoggedUser().getUserId());
     }
 
+    @GetMapping("/own-sorted")
+    public Page<SimpleAuctionDTO> getUserAuctionsSorted(
+            @RequestParam("page") int page, @RequestParam("size") int size,
+            @RequestParam(value = "sort", required = false, defaultValue = "ID_DESC") AuctionSort sort,
+            @RequestParam Map<String, String> filterMap) {
+        return auctionService.getUserAuctionsSorted(
+                getLoggedUser().getUserId(), page, size, sort, filterMap);
+    }
+
+    @GetMapping("/create-auction-data")
+    public CreateAuctionUserDTO getCreateAuctionUser() {
+        return userService.getCreateAuctionUserDTO(getLoggedUser().getUserId());
+    }
 }
