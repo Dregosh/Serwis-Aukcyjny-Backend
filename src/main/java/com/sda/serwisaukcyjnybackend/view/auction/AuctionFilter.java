@@ -10,7 +10,8 @@ public enum AuctionFilter {
     BID_PRICE_TO,
     ONLY_PROMOTED,
     ONLY_BUY_NOW,
-    ONLY_CAN_BID;
+    ONLY_CAN_BID,
+    ALL_STATUSES;
 
     public static Map<AuctionFilter, String> mapToFilterAuctionMap(Map<String, String> stringMap) {
         return stringMap.entrySet().stream()
