@@ -106,4 +106,9 @@ public class AuctionController {
     public CreateAuctionUserDTO getCreateAuctionUser() {
         return userService.getCreateAuctionUserDTO(getLoggedUser().getUserId());
     }
+
+    @PostMapping("/end-own-auction")
+    public void UserEndsHisOwnAuction(@RequestBody @Valid UserEndsOwnAuctionCommand command) {
+        commandDispatcher.handle(command);
+    }
 }

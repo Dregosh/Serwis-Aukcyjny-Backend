@@ -56,6 +56,7 @@ public class AuctionService {
                                                         AuctionSort sort,
                                                         Map<String, String> filterMap) {
         Pageable pageable = PageRequest.of(page, size, createSort(sort));
+        filterMap.put("ALL_STATUSES", "true");
         AuctionSpecification specification =
                 AuctionSpecification.getFromAuctionFilterMap(filterMap).build();
         Specification<Auction> sellerConstraint =

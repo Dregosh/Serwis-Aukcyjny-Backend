@@ -12,7 +12,9 @@ public enum AuctionSort {
     BUY_NOW_PRICE_ASC("buyNowPrice", "asc"),
     BUY_NOW_PRICE_DESC("buyNowPrice", "desc"),
     TITLE_ASC("title", "asc"),
-    TITLE_DESC("title", "desc");
+    TITLE_DESC("title", "desc"),
+    END_TIME_ASC("endDateTime", "asc"),
+    END_TIME_DESC("endDateTime", "desc");
 
     String field;
     String sortType;

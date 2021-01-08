@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +48,7 @@ class DashboardServiceTest {
         Auction sampleAuction = new Auction();
         sampleAuction.setId(1L);
         sampleAuction.setTitle("sampleAuctionTitle");
-        sampleAuction.setBids(new ArrayList<>());
+        sampleAuction.setBids(new HashSet<>());
         sampleAuction.setMinPrice(BigDecimal.valueOf(100));
         sampleAuction.setBuyNowPrice(BigDecimal.valueOf(200));
         List<Auction> auctions = new ArrayList<>();
