@@ -18,7 +18,9 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -27,6 +29,7 @@ import java.util.List;
 @Setter
 @NamedEntityGraph(name = "auction-photos", attributeNodes = {
         @NamedAttributeNode("photos"),
+        @NamedAttributeNode("bids"),
 })
 @NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
         @NamedAttributeNode("photos"),
@@ -79,7 +82,7 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     private AuctionStatus status;
 
     @OneToMany(mappedBy = "auction", fetch = FetchType.LAZY)
-    private List<Bid> bids = new ArrayList<>();
+    private Set<Bid> bids = new HashSet<>();
 
     @OneToOne(mappedBy = "auction")
     private Purchase purchase;

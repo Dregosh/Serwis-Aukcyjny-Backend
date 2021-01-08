@@ -23,6 +23,7 @@ public class AuctionSpecification implements Specification<Auction> {
     private static final String CATEGORY_ID = "id";
     private static final String PROMOTED = "isPromoted";
     private static final String STATUS = "status";
+    private static final String ALL_STATUSES = "allStatuses";
 
     private BigDecimal buyNowPriceFrom;
     private BigDecimal buyNowPriceTo;
@@ -31,6 +32,7 @@ public class AuctionSpecification implements Specification<Auction> {
     private boolean onlyPromoted;
     private boolean onlyBuyNow;
     private boolean onlyCanBid;
+    private boolean allStatuses;
     private Long categoryId;
 
 
@@ -98,13 +100,16 @@ public class AuctionSpecification implements Specification<Auction> {
         return criteriaBuilder.equal(root.get(CATEGORY).get(CATEGORY_ID), categoryId);
     }
     private Predicate notEnded(Root<Auction> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.notEqual(root.get(STATUS), AuctionStatus.ENDED);
+        if (!allStatuses) {
+            return criteriaBuilder.notEqual(root.get(STATUS), AuctionStatus.ENDED);
+        }
+        return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
     }
 
     public AuctionSpecification(BigDecimal buyNowPriceFrom, BigDecimal buyNowPriceTo,
                                 BigDecimal bidPriceFrom, BigDecimal bidPriceTo,
                                 boolean onlyPromoted, boolean onlyBuyNow,
-                                boolean onlyCanBid, Long categoryId) {
+                                boolean onlyCanBid, boolean allStatuses, Long categoryId) {
         Preconditions.checkArgument(!(onlyBuyNow && onlyCanBid), "Could not filter by onlyBuyNow and onlyBid");
         this.buyNowPriceFrom = buyNowPriceFrom;
         this.buyNowPriceTo = buyNowPriceTo;
@@ -113,6 +118,7 @@ public class AuctionSpecification implements Specification<Auction> {
         this.onlyPromoted = onlyPromoted;
         this.onlyBuyNow = onlyBuyNow;
         this.onlyCanBid = onlyCanBid;
+        this.allStatuses = allStatuses;
         this.categoryId = categoryId;
     }
 
@@ -139,6 +145,9 @@ public class AuctionSpecification implements Specification<Auction> {
         }
         if (filterMap.containsKey(AuctionFilter.ONLY_CAN_BID)) {
             builder.onlyCanBid(true);
+        }
+        if (filterMap.containsKey(AuctionFilter.ALL_STATUSES)) {
+            builder.allStatuses(true);
         }
         return builder;
     }

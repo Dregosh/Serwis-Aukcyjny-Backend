@@ -13,40 +13,51 @@ import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedServic
 public class AuctionMapper {
 
     public static SimpleAuctionDTO mapToSimpleAuction(Auction auction) {
-        return SimpleAuctionDTO.builder()
+        return SimpleAuctionDTO
+                .builder()
                 .id(auction.getId())
                 .title(auction.getTitle())
                 .bidPrice(auction.getMaxBid())
                 .buyNowPrice(auction.getBuyNowPrice())
-                .mainPhotoName(auction.getPhotos().size() != 0 ? auction.getPhotos().get(0).getName() : null)
+                .alreadyBidded(auction.getBids().size() > 0)
+                .biddersAmount(auction.getBids().size())
+                .mainPhotoName(auction.getPhotos().size() != 0 ?
+                               auction.getPhotos().get(0).getName() : null)
+                .status(auction.getStatus())
+                .isBought(auction.isBought())
+                .purchaseId(auction.getPurchase() != null ? auction.getPurchase().getId() : null)
+                .startDateTime(auction.getStartDateTime())
+                .endDateTime(auction.getEndDateTime())
                 .build();
     }
 
     public static AuctionDTO map(Auction auction, boolean observed) {
         return AuctionDTO.builder()
-                .buyNowPrice(auction.getBuyNowPrice())
-                .canBid(auction.getStatus() == AuctionStatus.STARTED && !isUserAuction(auction.getSellerId()))
-                .canBuyNow(auction.getStatus() == AuctionStatus.CREATED && !isUserAuction(auction.getSellerId()))
-                .description(auction.getDescription())
-                .endDateTime(auction.getEndDateTime())
-                .id(auction.getId())
-                .maxBid(auction.getMaxBid())
-                .observed(observed)
-                .premium(auction.getIsPromoted())
-                .sellerDisplayName(auction.getSellerDisplayName())
-                .sellerId(auction.getSellerId())
-                .startDateTime(auction.getStartDateTime())
-                .status(auction.getStatus())
-                .title(auction.getTitle())
-                .photoNames(filterPhotos(auction))
-                .userAuction(isUserAuction(auction.getSellerId()))
-                .build();
+                         .buyNowPrice(auction.getBuyNowPrice())
+                         .canBid(auction.getStatus() == AuctionStatus.STARTED &&
+                                 !isUserAuction(auction.getSellerId()))
+                         .canBuyNow(auction.getStatus() == AuctionStatus.CREATED &&
+                                    !isUserAuction(auction.getSellerId()))
+                         .description(auction.getDescription())
+                         .endDateTime(auction.getEndDateTime())
+                         .id(auction.getId())
+                         .maxBid(auction.getMaxBid())
+                         .observed(observed)
+                         .premium(auction.getIsPromoted())
+                         .sellerDisplayName(auction.getSellerDisplayName())
+                         .sellerId(auction.getSellerId())
+                         .startDateTime(auction.getStartDateTime())
+                         .status(auction.getStatus())
+                         .title(auction.getTitle())
+                         .photoNames(filterPhotos(auction))
+                         .userAuction(isUserAuction(auction.getSellerId()))
+                         .build();
     }
 
     private static List<String> filterPhotos(Auction auction) {
         return auction.getPhotos().stream()
-                .map(Photo::getName)
-                .collect(Collectors.toList());
+                      .map(Photo::getName)
+                      .collect(Collectors.toList());
     }
 
     private static boolean isUserAuction(Long sellerId) {
