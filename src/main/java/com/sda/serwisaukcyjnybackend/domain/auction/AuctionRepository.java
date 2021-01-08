@@ -12,9 +12,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends PagingAndSortingRepository<Auction, Long>, JpaSpecificationExecutor<Auction> {
@@ -49,7 +49,7 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
     @EntityGraph("auction-photos")
     List<Auction> findAllByStatusAndStartDateTimeBefore(AuctionStatus status, LocalDateTime now);
 
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-photos-seller")
     List<Auction> findAllBySeller_Id(Long sellerId);
 
     @EntityGraph("auction-photos")
@@ -62,13 +62,20 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
             "where o.user.id = :userId")
     List<Auction> findAllObserved(@Param("userId") Long userId);
 
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-photos-seller")
     Auction getById(Long auctionId);
 
+    @Override
+    @NonNull
     @EntityGraph("auction-photos")
-    Page<Auction> findAll(@Nullable Specification<Auction> spec, Pageable pageable);
+    Page<Auction> findAll(@Nullable Specification<Auction> spec, @Nullable Pageable pageable);
 
     @Query("select a from Auction a where a.id = :id")
     Auction getOne(@Param("id") Long id);
+
+    @Query("select a from Auction a " +
+            "where a.id = :id and a.seller.id = :sellerId")
+    Optional<Auction> findAuctionByIdAndSellerId(@Param("id") Long auctionId,
+                                                  @Param("sellerId") Long sellerId);
 
 }

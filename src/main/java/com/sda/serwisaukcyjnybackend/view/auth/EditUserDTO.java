@@ -1,5 +1,6 @@
-package com.sda.serwisaukcyjnybackend.view.edituser;
+package com.sda.serwisaukcyjnybackend.view.auth;
 
+import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +15,5 @@ public class EditUserDTO {
     private String displayName;
     private String firstName;
     private String lastName;
-    private String addressCity;
-    private String addressState;
-    private String addressStreet;
-    private String addressNumber;
-    private String addressPostal;
+    private Address address;
 }

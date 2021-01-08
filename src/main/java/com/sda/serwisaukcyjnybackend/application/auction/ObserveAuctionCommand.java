@@ -2,11 +2,13 @@ package com.sda.serwisaukcyjnybackend.application.auction;
 
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import lombok.Value;
-import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotNull;
 
 @Value
-public class AddPhotosToAuctionCommand implements Command<Void> {
+public class ObserveAuctionCommand implements Command<Void> {
+    @NotNull
     Long auctionId;
-    Long sellerId;
-    MultipartFile image;
+    @NotNull
+    Long userId;
 }

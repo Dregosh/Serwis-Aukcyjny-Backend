@@ -1,6 +1,5 @@
 package com.sda.serwisaukcyjnybackend.application.audit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sda.serwisaukcyjnybackend.domain.audit.Audit;
 import com.sda.serwisaukcyjnybackend.domain.audit.AuditEntry;
 import com.sda.serwisaukcyjnybackend.domain.audit.AuditRepository;
@@ -19,7 +18,7 @@ public class AuditLogger {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void log(AuditEntry auditEntry) {
         log.info("{}, result: {}, payload: {}, duration: {}", auditEntry.getCommandName(),
-                auditEntry.getCommandContent(), auditEntry.getResult(), auditEntry.getDuration());
+                auditEntry.getResult(), auditEntry.getCommandContent(), auditEntry.getDuration());
         var audit = new Audit(auditEntry.getCommandName(), auditEntry.getCommandContent(), auditEntry.getResult(), auditEntry.getDuration());
         auditRepository.save(audit);
     }
