@@ -172,4 +172,8 @@ public class Auction extends AbstractAggregateRoot<Auction> {
     public String getSellerDisplayName() {
         return seller.getDisplayName();
     }
+
+    public boolean hasNotEmptyObservations() {
+        return !this.observations.isEmpty();
+    }
 }
