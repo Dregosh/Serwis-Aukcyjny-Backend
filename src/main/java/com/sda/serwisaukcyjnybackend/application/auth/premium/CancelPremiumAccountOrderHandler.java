@@ -14,6 +14,7 @@ import javax.validation.Valid;
 @Component
 @RequiredArgsConstructor
 public class CancelPremiumAccountOrderHandler implements CommandHandler<CancelPremiumAccountOrder, String> {
+    private static final String AUTH_MY_ACCOUNT = "/auth/my-account";
     private final PremiumOrderRepository premiumOrderRepository;
 
     @Value("${app.web.guiUrl}")
@@ -24,7 +25,7 @@ public class CancelPremiumAccountOrderHandler implements CommandHandler<CancelPr
     public CommandResult<String> handle(@Valid CancelPremiumAccountOrder command) {
         premiumOrderRepository.findByOrderId(command.getOrderId())
                 .ifPresent(premiumOrderRepository::delete);
-        return CommandResult.created(guiUrl);
+        return CommandResult.created(guiUrl + AUTH_MY_ACCOUNT);
     }
 
     @Override
