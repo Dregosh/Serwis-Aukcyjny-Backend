@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ public class PremiumAccountsCleaner {
     private final UserRepository userRepository;
 
     @Scheduled(cron = "${app.premium.cleanerCron}")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setToNormalAccountType() {
         LocalDateTime checkTime = LocalDateTime.now();
         var users = userRepository.findAllByAccountTypeAndPremiumAccountExpirationAfter(AccountType.PREMIUM, checkTime);

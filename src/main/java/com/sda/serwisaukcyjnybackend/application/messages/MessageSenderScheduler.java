@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -23,6 +25,7 @@ public class MessageSenderScheduler {
     protected Integer maxTries;
 
     @Scheduled(cron = "${app.message.sendCron}")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void mailSend() {
         var messages = messageRepository.getAllByMessageStatusOrderByCreatedAtDesc(MessageStatus.CREATED);
         log.info("START SENDING MESSAGES - found {} messages to send", messages.size());

@@ -25,6 +25,7 @@ public class SimpleAuctionDTO {
     private AuctionStatus status;
     private Boolean isBought;
     private Long purchaseId;
+    private boolean promoted;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime startDateTime;

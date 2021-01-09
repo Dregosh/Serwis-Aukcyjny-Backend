@@ -1,0 +1,1 @@
+alter table user modify column premium_account_expiration DATE;
