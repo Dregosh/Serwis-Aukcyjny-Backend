@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class User {
     @Column(name = "promoted_auctions_count")
     private int promotedAuctionsCount;
     @Column(name = "premium_account_expiration")
-    private LocalDateTime premiumAccountExpiration;
+    private LocalDate premiumAccountExpiration;
     @OneToMany(mappedBy = "buyer")
     private List<Purchase> purchases = new ArrayList<>();
     @OneToMany(mappedBy = "user")
@@ -85,8 +86,12 @@ public class User {
     }
 
     public void setPremiumAccount(int days) {
+        if (this.accountType == AccountType.PREMIUM) {
+            premiumAccountExpiration = premiumAccountExpiration.plusDays(days);
+        } else {
+            premiumAccountExpiration = LocalDate.now().plusDays(days);
+        }
         this.accountType = AccountType.PREMIUM;
-        premiumAccountExpiration = LocalDateTime.now().plusDays(days);
     }
 
     public void setNormalAccount() {
