@@ -7,6 +7,7 @@ import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import com.sda.serwisaukcyjnybackend.domain.category.Category;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.purchase.PurchaseRepository;
+import com.sda.serwisaukcyjnybackend.domain.purchase.event.PurchaseCreated;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import javax.persistence.OptimisticLockException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +35,8 @@ class BuyNowCommandHandlerTest {
     AuctionRepository auctionRepository;
     @Mock
     PurchaseRepository purchaseRepository;
+    @Mock
+    ApplicationEventPublisher eventPublisher;
     
     @InjectMocks
     BuyNowCommandHandler handler;
@@ -43,9 +48,10 @@ class BuyNowCommandHandlerTest {
         var auction = prepareAuction();
         var user = prepareUser(2L);
         when(auctionRepository.getById(anyLong())).thenReturn(auction);
-        when(userRepository.getOne(anyLong())).thenReturn(user);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(auctionRepository.save(any())).thenReturn(new Auction());
         when(purchaseRepository.save(any())).thenReturn(new Purchase());
+        doNothing().when(eventPublisher).publishEvent(any(PurchaseCreated.class));
 
         //when && then
         handler.handle(command);
@@ -59,7 +65,7 @@ class BuyNowCommandHandlerTest {
         updateAuction(auction, AuctionStatus.STARTED, 1L);
         var user = prepareUser(2L);
         doReturn(auction).when(auctionRepository).getById(anyLong());
-        when(userRepository.getOne(anyLong())).thenReturn(user);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         //when && then
         assertThrows(CannotBuyNowException.class, () -> handler.handle(command));
@@ -72,7 +78,7 @@ class BuyNowCommandHandlerTest {
         var auction = prepareAuction();
         var user = prepareUser(2L);
         doReturn(auction).when(auctionRepository).getById(anyLong());
-        when(userRepository.getOne(anyLong())).thenReturn(user);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         doThrow(OptimisticLockException.class).when(auctionRepository).save(any());
 
         //when && then
@@ -86,7 +92,7 @@ class BuyNowCommandHandlerTest {
         var auction = prepareAuction();
         var user = prepareUser(1L);
         doReturn(auction).when(auctionRepository).getById(anyLong());
-        when(userRepository.getOne(anyLong())).thenReturn(user);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         //when && then
         assertThrows(IllegalArgumentException.class, () ->handler.handle(command));
