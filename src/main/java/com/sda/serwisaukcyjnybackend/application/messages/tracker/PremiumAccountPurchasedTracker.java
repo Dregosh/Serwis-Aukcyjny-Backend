@@ -35,7 +35,7 @@ public class PremiumAccountPurchasedTracker {
         payload.put(PREMIUM_ACCOUNT_EXPIRATION, event.getPremiumAccountExpiration());
         payload.put(ACCOUNT_URL, guiUrl + "/auth/my-account");
 
-        var message = new Message(payload, MessageType.PREMIUM_ACCOUNT_PURCHASED, event.getEmail());
+        Message message = new Message(payload, MessageType.PREMIUM_ACCOUNT_PURCHASED, event.getEmail());
         messageRepository.save(message);
     }
 
