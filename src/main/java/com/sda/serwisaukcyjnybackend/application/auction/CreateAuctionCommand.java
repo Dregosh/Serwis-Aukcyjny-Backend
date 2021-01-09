@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
 import com.sda.serwisaukcyjnybackend.application.command.Command;
+import com.sda.serwisaukcyjnybackend.view.shared.validators.NotBeforeNow;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class CreateAuctionCommand implements Command<Long> {
     @NotNull
     private Boolean promoted;
     @NotNull
+    @NotBeforeNow
     private LocalDateTime startDate;
     @With
     private Long userId;
