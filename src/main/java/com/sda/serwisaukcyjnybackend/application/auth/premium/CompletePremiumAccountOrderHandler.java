@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @Component
 @RequiredArgsConstructor
 public class CompletePremiumAccountOrderHandler implements CommandHandler<CompletePremiumAccountOrder, String> {
+    private static final String AUTH_MY_ACCOUNT = "/auth/my-account";
     private final UserRepository userRepository;
     private final PaymentStrategy paymentStrategy;
     private final PremiumOrderRepository premiumOrderRepository;
@@ -40,7 +41,7 @@ public class CompletePremiumAccountOrderHandler implements CommandHandler<Comple
         user.setPremiumAccount(durationDays);
         userRepository.save(user);
         premiumOrderRepository.delete(order);
-        return CommandResult.created(guiUrl);
+        return CommandResult.created(guiUrl + AUTH_MY_ACCOUNT);
     }
 
     @Override
