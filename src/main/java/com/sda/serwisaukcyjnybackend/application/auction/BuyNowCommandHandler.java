@@ -27,7 +27,7 @@ public class BuyNowCommandHandler implements CommandHandler<BuyNowCommand, Void>
     @Override
     public CommandResult<Void> handle(@Valid BuyNowCommand command) {
         var user = userRepository.getOne(command.getUserId());
-        var auction = auctionRepository.getOne(command.getAuctionId());
+        var auction = auctionRepository.getById(command.getAuctionId());
 
         Preconditions.checkArgument(!auction.getSellerId().equals(user.getId()), "User cannot buy own auction");
 

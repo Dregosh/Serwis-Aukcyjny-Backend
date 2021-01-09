@@ -13,35 +13,30 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends PagingAndSortingRepository<Auction, Long>, JpaSpecificationExecutor<Auction> {
 
-    @EntityGraph("auction-photos")
-    List<Auction> findAllBySeller_IdOrderByEndDateTimeAsc(
-            Long sellerId, Pageable pageable);
+    List<AuctionId> findAllBySeller_IdOrderByEndDateTimeAsc(
+            @Param("sellerId") Long sellerId, Pageable pageable);
 
-    @EntityGraph("auction-photos")
-    List<Auction> findAllByStatusNotOrderByStartDateTimeDesc(
+
+    List<AuctionId> findAllByStatusNotOrderByStartDateTimeDesc(
+            @Param("auctionStatus") AuctionStatus status, Pageable pageable);
+
+    List<AuctionId> findAllByStatusNotOrderByEndDateTimeAsc(
+            @Param("auctionStatus") AuctionStatus status, Pageable pageable);
+
+    List<AuctionId> findAllByStatusOrderByEndDateTimeDesc(
             AuctionStatus status, Pageable pageable);
 
-    @EntityGraph("auction-photos")
-    List<Auction> findAllByStatusNotOrderByEndDateTimeAsc(
-            AuctionStatus status, Pageable pageable);
-
-    @EntityGraph("auction-photos")
-    List<Auction> findAllByStatusOrderByEndDateTimeDesc(
-            AuctionStatus status, Pageable pageable);
-
-    @EntityGraph("auction-photos")
-    List<Auction> findAllByObservations_User_IdOrderByEndDateTimeAsc(
+    List<AuctionId> findAllByObservations_User_IdOrderByEndDateTimeAsc(
             Long observerId, Pageable pageable);
 
-    @EntityGraph("auction-photos")
-    List<Auction> findAllByBids_User_Id(Long bidderId, Pageable pageable);
-
+    List<AuctionId> findAllByBids_User_Id(Long bidderId, Pageable pageable);
 
     @EntityGraph("auction-photos")
     List<Auction> findAllByStatusAndEndDateTimeBefore(AuctionStatus status, LocalDateTime now);
@@ -67,7 +62,7 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
 
     @Override
     @NonNull
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-photos-purchase")
     Page<Auction> findAll(@Nullable Specification<Auction> spec, @Nullable Pageable pageable);
 
     @Query("select a from Auction a where a.id = :id")
@@ -80,5 +75,8 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
 
     List<Auction> findAllByStatusNotAndEndDateTimeBetween(AuctionStatus status,
                                                        LocalDateTime earlierDate, LocalDateTime laterDate);
+
+    @EntityGraph("auction-photos-purchase")
+    Collection<Auction> findAuctionsByIdIn(Collection<Long> ids);
 
 }

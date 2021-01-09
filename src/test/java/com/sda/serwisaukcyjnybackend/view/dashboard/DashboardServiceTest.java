@@ -41,28 +41,4 @@ class DashboardServiceTest {
         //then
         assertThat(result).isEmpty();
     }
-
-    @Test
-    void shouldGetSimpleAuctionDTO() {
-        //given
-        Auction sampleAuction = new Auction();
-        sampleAuction.setId(1L);
-        sampleAuction.setTitle("sampleAuctionTitle");
-        sampleAuction.setBids(new HashSet<>());
-        sampleAuction.setMinPrice(BigDecimal.valueOf(100));
-        sampleAuction.setBuyNowPrice(BigDecimal.valueOf(200));
-        List<Auction> auctions = new ArrayList<>();
-        auctions.add(sampleAuction);
-        dashboardService.limit = 10;
-        when(this.auctionRepository.findAllByStatusNotOrderByStartDateTimeDesc(
-                any(), any()
-        )).thenReturn(auctions);
-        //when
-        List<SimpleAuctionDTO> result =
-                this.dashboardService.getActiveAuctionsOrderByLatestCreated();
-        //then
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getId()).isEqualTo(1L);
-    }
-
 }

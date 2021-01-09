@@ -42,7 +42,7 @@ class BuyNowCommandHandlerTest {
         var command = new BuyNowCommand(1L,1L);
         var auction = prepareAuction();
         var user = prepareUser(2L);
-        when(auctionRepository.getOne(anyLong())).thenReturn(auction);
+        when(auctionRepository.getById(anyLong())).thenReturn(auction);
         when(userRepository.getOne(anyLong())).thenReturn(user);
         when(auctionRepository.save(any())).thenReturn(new Auction());
         when(purchaseRepository.save(any())).thenReturn(new Purchase());
@@ -58,7 +58,7 @@ class BuyNowCommandHandlerTest {
         var auction = prepareAuction();
         updateAuction(auction, AuctionStatus.STARTED, 1L);
         var user = prepareUser(2L);
-        doReturn(auction).when(auctionRepository).getOne(anyLong());
+        doReturn(auction).when(auctionRepository).getById(anyLong());
         when(userRepository.getOne(anyLong())).thenReturn(user);
 
         //when && then
@@ -71,7 +71,7 @@ class BuyNowCommandHandlerTest {
         var command = new BuyNowCommand(1L,1L);
         var auction = prepareAuction();
         var user = prepareUser(2L);
-        doReturn(auction).when(auctionRepository).getOne(anyLong());
+        doReturn(auction).when(auctionRepository).getById(anyLong());
         when(userRepository.getOne(anyLong())).thenReturn(user);
         doThrow(OptimisticLockException.class).when(auctionRepository).save(any());
 
@@ -80,12 +80,12 @@ class BuyNowCommandHandlerTest {
     }
 
     @Test
-    void userCantBidOwnAuction() {
+    void userCantBuyOwnAuction() {
         //given
         var command = new BuyNowCommand(1L,1L);
         var auction = prepareAuction();
         var user = prepareUser(1L);
-        doReturn(auction).when(auctionRepository).getOne(anyLong());
+        doReturn(auction).when(auctionRepository).getById(anyLong());
         when(userRepository.getOne(anyLong())).thenReturn(user);
 
         //when && then
