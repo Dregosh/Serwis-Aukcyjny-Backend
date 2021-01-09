@@ -17,6 +17,7 @@ public enum MessageType {
     BID_SOLD_MESSAGE("Sprzedaż przez licytację"),
     BID_PURCHASED_MESSAGE("Zakup przez licytację"),
     PREMIUM_ACCOUNT_PURCHASED("Konto premium zostało zakupione"),
+
     AUCTION_ENDING_REMINDER("Obserwowana aukcja kończy się w ciągu 24h");
 
     private final String subject;
