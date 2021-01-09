@@ -8,8 +8,6 @@ import javax.validation.constraints.NotNull;
 
 @Value
 public class StopObservingAuctionCommand implements Command<Void> {
-    @NotNull
-    Long observationId;
-    @With
+    Long auctionId;
     Long userId;
 }

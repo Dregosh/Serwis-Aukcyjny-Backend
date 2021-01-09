@@ -9,6 +9,7 @@ import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +26,21 @@ public class UserEndsOwnAuctionCommandHandler
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid UserEndsOwnAuctionCommand command) {
-        Auction auction = this.auctionRepository.getById(command.getAuctionId());
+        var auction = this.auctionRepository.getById(command.getAuctionId());
         if (!AuthenticatedService.getLoggedUser().getUserId().equals(auction.getSellerId())) {
             throw new UserCannotEndNotOwnedAuctionException(
                     auction.getId(), "user is not a Seller in this auction");
         }
         auction.setStatus(AuctionStatus.ENDED);
         auction.setEndDateTime(LocalDateTime.now());
-        this.auctionRepository.save(auction);
+        try {
+            this.auctionRepository.save(auction);
+        } catch (OptimisticEntityLockException exception) {
+            auction = this.auctionRepository.getById(command.getAuctionId());
+            auction.setStatus(AuctionStatus.ENDED);
+            auction.setEndDateTime(LocalDateTime.now());
+            this.auctionRepository.save(auction);
+        }
         return CommandResult.ok();
     }
 

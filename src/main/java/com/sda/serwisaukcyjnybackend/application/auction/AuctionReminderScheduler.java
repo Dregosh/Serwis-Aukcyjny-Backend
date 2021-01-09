@@ -12,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class AuctionReminderScheduler {
     private String guiUrl;
 
     @Scheduled(cron = "${app.auction.reminderCheckCron}")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void checkForRemindersToSend() {
         List<Auction> auctionsToSendReminderAbout = getObservedAuctionsEndingBetween23And24Hours();
         log.info("SCHEDULED CHECK FOR REMINDERS TO SEND - found {} auctions to remind about", auctionsToSendReminderAbout.size());

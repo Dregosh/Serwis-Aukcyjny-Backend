@@ -27,22 +27,10 @@ class StopObservingAuctionCommandHandlerTest {
         //given
         StopObservingAuctionCommand command = new StopObservingAuctionCommand(1L, 1L);
         Observation observation = createObservation();
-        when(observationRepository.getOne(anyLong())).thenReturn(observation);
+        when(observationRepository.findByUserAndAuction(anyLong(), anyLong())).thenReturn(observation);
 
         //when & then
         handler.handle(command);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenUserMismatch() {
-        //given
-        StopObservingAuctionCommand command = new StopObservingAuctionCommand(1L, 2L);
-        Observation observation = createObservation();
-        when(observationRepository.getOne(anyLong())).thenReturn(observation);
-
-        //when & then
-        assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> handler.handle(command));
     }
 
     Observation createObservation() {

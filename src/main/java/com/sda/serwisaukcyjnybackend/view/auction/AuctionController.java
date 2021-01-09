@@ -59,9 +59,8 @@ public class AuctionController {
     }
 
     @PostMapping("/{auctionId}/stop-observing")
-    public void stopObservingAuction(@PathVariable(name = "auctionId") Long auctionId,
-                                     @RequestBody @Valid StopObservingAuctionCommand stopObservingAuctionCommand) {
-        commandDispatcher.handle(stopObservingAuctionCommand.withUserId(getLoggedUser().getUserId()));
+    public void stopObservingAuction(@PathVariable(name = "auctionId") Long auctionId) {
+        commandDispatcher.handle(new StopObservingAuctionCommand(auctionId, getLoggedUser().getUserId()));
     }
 
     @PostMapping("/rate-buyer")

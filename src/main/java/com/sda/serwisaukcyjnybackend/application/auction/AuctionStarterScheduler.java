@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +20,7 @@ public class AuctionStarterScheduler {
     private final AuctionRepository auctionRepository;
 
     @Scheduled(cron = "${app.auction.expiredCheckCron}")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void checkForExpiredAuctions() {
         List<Auction> auctionsToStart = this.auctionRepository.findAllByStatusAndStartDateTimeBefore(AuctionStatus.CREATED, LocalDateTime.now());
         log.info("SCHEDULED CHECK FOR AUCTIONS TO START - found {} auctions to start", auctionsToStart.size());

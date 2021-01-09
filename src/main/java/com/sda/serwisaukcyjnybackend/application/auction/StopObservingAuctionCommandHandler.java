@@ -1,6 +1,5 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
-import com.google.common.base.Preconditions;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
@@ -21,10 +20,7 @@ public class StopObservingAuctionCommandHandler implements CommandHandler<StopOb
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid StopObservingAuctionCommand command) {
-        Observation observation = observationRepository.getOne(command.getObservationId());
-
-        Preconditions.checkArgument(observation.getUser().getId().equals(command.getUserId()), "Cannot stop observing not this user's observation");
-
+        Observation observation = observationRepository.findByUserAndAuction(command.getUserId(), command.getAuctionId());
         observationRepository.delete(observation);
         return CommandResult.ok();
     }

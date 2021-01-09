@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class UserEndsOwnAuctionCommand implements Command<Void> {
-    Long auctionId;
+    private Long auctionId;
 }
