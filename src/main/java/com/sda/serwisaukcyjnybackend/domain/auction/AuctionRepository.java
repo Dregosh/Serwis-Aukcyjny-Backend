@@ -78,4 +78,7 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
     Optional<Auction> findAuctionByIdAndSellerId(@Param("id") Long auctionId,
                                                   @Param("sellerId") Long sellerId);
 
+    List<Auction> findAllByStatusNotAndEndDateTimeBetween(AuctionStatus status,
+                                                       LocalDateTime earlierDate, LocalDateTime laterDate);
+
 }
