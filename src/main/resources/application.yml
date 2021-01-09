@@ -49,6 +49,7 @@ app:
     duration: 14
     expiredCheckCron: 0/60 * * * * ?
     startCheckCron: 0/60 * * * * ?
+    reminderCheckCron: 0 0 * * * *
   photo:
     destination: /data/serwis-aukcyjny-photo
   premium:
