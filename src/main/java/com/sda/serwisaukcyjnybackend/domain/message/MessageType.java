@@ -15,7 +15,8 @@ public enum MessageType {
     BUY_NOW_SOLD_MESSAGE("Sprzedaż przez Kup teraz"),
     AUCTION_ENDED_WITHOUT_PURCHASE_MESSAGE("Aukcja zakończyła się bez ofert zakupu"),
     BID_SOLD_MESSAGE("Sprzedaż przez licytację"),
-    BID_PURCHASED_MESSAGE("Zakup przez licytację");
+    BID_PURCHASED_MESSAGE("Zakup przez licytację"),
+    PREMIUM_ACCOUNT_PURCHASED("Konto premium zostało zakupione");
 
     private final String subject;
 }
