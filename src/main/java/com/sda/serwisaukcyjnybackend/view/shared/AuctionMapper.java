@@ -3,12 +3,14 @@ package com.sda.serwisaukcyjnybackend.view.shared;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import com.sda.serwisaukcyjnybackend.domain.auction.Photo;
+import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.view.auction.AuctionDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService.getLoggedUserInfo;
+import static java.util.Objects.nonNull;
 
 public class AuctionMapper {
 
@@ -25,6 +27,7 @@ public class AuctionMapper {
                 .status(auction.getStatus())
                 .isBought(auction.isBought())
                 .purchaseId(auction.getPurchase() != null ? auction.getPurchase().getId() : null)
+                .alreadyRatedBySeller(checkIfAlreadyRatedBySeller(auction.getPurchase()))
                 .startDateTime(auction.getStartDateTime())
                 .endDateTime(auction.getEndDateTime())
                 .build();
@@ -63,5 +66,14 @@ public class AuctionMapper {
         return getLoggedUserInfo()
                 .map(userDetails -> userDetails.getUserId().equals(sellerId))
                 .orElse(false);
+    }
+
+    private static boolean checkIfAlreadyRatedBySeller(Purchase purchase) {
+        if (nonNull(purchase)) {
+            if (nonNull(purchase.getRating())) {
+                return purchase.getRating().getSellersRating() != null;
+            }
+        }
+        return false;
     }
 }

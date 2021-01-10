@@ -24,6 +24,7 @@ public class SimpleAuctionDTO {
     private Integer biddersAmount;
     private AuctionStatus status;
     private Boolean isBought;
+    private Boolean alreadyRatedBySeller;
     private Long purchaseId;
     private boolean promoted;
 
