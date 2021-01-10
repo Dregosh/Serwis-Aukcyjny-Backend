@@ -74,8 +74,7 @@ class ObserveAuctionCommandHandlerTest {
 
         //when & then
         assertThatExceptionOfType(CannotObserveAuctionException.class)
-                .isThrownBy(() -> handler.handle(command))
-                .withMessage("Cannot observe auction " + command.getAuctionId() + " - auction has ended");
+                .isThrownBy(() -> handler.handle(command));
     }
 
     @Test
@@ -88,9 +87,8 @@ class ObserveAuctionCommandHandlerTest {
         when(userRepository.getOne(anyLong())).thenReturn(user);
 
         //when & then
-        assertThatExceptionOfType(CannotObserveAuctionException.class)
-                .isThrownBy(() -> handler.handle(command))
-                .withMessage("Cannot observe auction " + command.getAuctionId() + " - own auction");
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> handler.handle(command));
     }
 
     Auction createAuction(AuctionStatus status) {

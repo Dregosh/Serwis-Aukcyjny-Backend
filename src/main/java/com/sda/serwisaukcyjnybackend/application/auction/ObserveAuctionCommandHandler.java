@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
+import com.google.common.base.Preconditions;
 import com.sda.serwisaukcyjnybackend.application.auction.exception.CannotObserveAuctionException;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
@@ -32,22 +33,17 @@ public class ObserveAuctionCommandHandler implements CommandHandler<ObserveAucti
         User user = userRepository.getOne(command.getUserId());
 
         checkIfAuctionEnded(auction);
-        checkIfOwnAuction(user.getId(), auction);
+        Preconditions.checkArgument(!auction.getSellerId().equals(user.getId()),
+                "Cannot observe own auction");
 
         Observation observation = new Observation(auction, user);
         observationRepository.save(observation);
         return CommandResult.ok();
     }
 
-    private void checkIfOwnAuction(Long userId, Auction auction) {
-        if (auction.getSellerId().equals(userId)) {
-            throw new CannotObserveAuctionException(auction.getId(), "own auction");
-        }
-    }
-
     private void checkIfAuctionEnded(Auction auction) {
         if (auction.getStatus().equals(AuctionStatus.ENDED)) {
-            throw new CannotObserveAuctionException(auction.getId(), "auction has ended");
+            throw new CannotObserveAuctionException(auction.getId());
         }
     }
 
