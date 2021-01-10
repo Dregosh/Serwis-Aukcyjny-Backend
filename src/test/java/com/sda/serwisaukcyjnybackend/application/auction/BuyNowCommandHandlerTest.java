@@ -35,8 +35,6 @@ class BuyNowCommandHandlerTest {
     AuctionRepository auctionRepository;
     @Mock
     PurchaseRepository purchaseRepository;
-    @Mock
-    ApplicationEventPublisher eventPublisher;
     
     @InjectMocks
     BuyNowCommandHandler handler;
@@ -51,7 +49,6 @@ class BuyNowCommandHandlerTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(auctionRepository.save(any())).thenReturn(new Auction());
         when(purchaseRepository.save(any())).thenReturn(new Purchase());
-        doNothing().when(eventPublisher).publishEvent(any(PurchaseCreated.class));
 
         //when && then
         handler.handle(command);

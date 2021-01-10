@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
@@ -25,7 +26,7 @@ public class PremiumAccountsCleaner {
     @Scheduled(cron = "${app.premium.cleanerCron}")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setToNormalAccountType() {
-        LocalDateTime checkTime = LocalDateTime.now();
+        LocalDate checkTime = LocalDate.now();
         var users = userRepository.findAllByAccountTypeAndPremiumAccountExpirationAfter(AccountType.PREMIUM, checkTime);
         log.info("SCHEDULED DELETE PREMIUM ACCOUNTS - found {} premium accounts to delete", users.size());
         for (User user : users) {

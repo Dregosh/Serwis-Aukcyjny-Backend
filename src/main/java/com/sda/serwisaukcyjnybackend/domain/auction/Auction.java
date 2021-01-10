@@ -28,20 +28,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@NamedEntityGraph(name = "auction-photos", attributeNodes = {
+@NamedEntityGraph(name = "auction-bids-purchase", attributeNodes = {
         @NamedAttributeNode("photos"),
         @NamedAttributeNode("bids"),
-})
-@NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
-        @NamedAttributeNode("photos"),
-        @NamedAttributeNode("seller")
-})
-@NamedEntityGraph(name = "auction-photos-purchase", attributeNodes = {
-        @NamedAttributeNode("photos"),
-        @NamedAttributeNode("seller"),
         @NamedAttributeNode("purchase"),
-        @NamedAttributeNode("bids"),
-        @NamedAttributeNode("category")
+})
+@NamedEntityGraph(name = "auction-seller", attributeNodes = {
+        @NamedAttributeNode("seller")
 })
 public class Auction extends AbstractAggregateRoot<Auction> {
     @Id
