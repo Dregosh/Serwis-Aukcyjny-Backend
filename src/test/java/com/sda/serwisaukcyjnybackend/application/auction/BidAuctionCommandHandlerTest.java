@@ -1,5 +1,6 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
+import com.sda.serwisaukcyjnybackend.application.auction.exception.CannotBidAuctionException;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
@@ -17,7 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.OptimisticLockException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -42,7 +45,7 @@ class BidAuctionCommandHandlerTest {
         var auction = prepareAuction();
         var user = prepareUser(2L);
         auction.setStatus(AuctionStatus.STARTED);
-        when(auctionRepository.getOne(anyLong())).thenReturn(auction);
+        when(auctionRepository.findById(anyLong())).thenReturn(Optional.of(auction));
         when(userRepository.getOne(anyLong())).thenReturn(user);
         when(auctionRepository.save(any())).thenReturn(new Auction());
         when(bidRepository.save(any())).thenReturn(new Bid());
@@ -61,7 +64,7 @@ class BidAuctionCommandHandlerTest {
         alreadyBiddedAuction.setMaxBid(BigDecimal.ONE);
         updateAuction(alreadyBiddedAuction, AuctionStatus.STARTED, 1L);
         var user = prepareUser(2L);
-        doReturn(auction).doReturn(alreadyBiddedAuction).when(auctionRepository).getOne(anyLong());
+        doReturn(Optional.of(auction)).doReturn(Optional.of(alreadyBiddedAuction)).when(auctionRepository).findById(anyLong());
         when(userRepository.getOne(anyLong())).thenReturn(user);
         doThrow(OptimisticLockException.class).doReturn(new Auction()).when(auctionRepository).save(any());
         when(bidRepository.save(any())).thenReturn(new Bid());
@@ -80,12 +83,12 @@ class BidAuctionCommandHandlerTest {
         alreadyBiddedAuction.setMaxBid(BigDecimal.TEN);
         updateAuction(alreadyBiddedAuction, AuctionStatus.STARTED, 1L);
         var user = prepareUser(2L);
-        doReturn(auction).doReturn(alreadyBiddedAuction).when(auctionRepository).getOne(anyLong());
+        doReturn(Optional.of(auction)).doReturn(Optional.of(alreadyBiddedAuction)).when(auctionRepository).findById(anyLong());
         when(userRepository.getOne(anyLong())).thenReturn(user);
         doThrow(OptimisticLockException.class).when(auctionRepository).save(any());
 
         //when && then
-        handler.handle(command);
+        assertThrows(CannotBidAuctionException.class, () ->  handler.handle(command));
     }
 
     @Test
@@ -98,12 +101,12 @@ class BidAuctionCommandHandlerTest {
         alreadyBiddedAuction.setMaxBid(BigDecimal.TEN);
         updateAuction(alreadyBiddedAuction, AuctionStatus.ENDED, 1L);
         var user = prepareUser(2L);
-        doReturn(auction).doReturn(alreadyBiddedAuction).when(auctionRepository).getOne(anyLong());
+        when(auctionRepository.findById(anyLong())).thenReturn(Optional.of(auction));
         when(userRepository.getOne(anyLong())).thenReturn(user);
         doThrow(OptimisticLockException.class).when(auctionRepository).save(any());
 
         //when && then
-        handler.handle(command);
+        assertThrows(CannotBidAuctionException.class, () ->  handler.handle(command));
     }
 
     @Test
@@ -113,7 +116,7 @@ class BidAuctionCommandHandlerTest {
         var auction = prepareAuction();
         updateAuction(auction, AuctionStatus.STARTED, 1L);
         var user = prepareUser(12L);
-        doReturn(auction).when(auctionRepository).getOne(anyLong());
+        when(auctionRepository.findById(anyLong())).thenReturn(Optional.of(auction));
         when(userRepository.getOne(anyLong())).thenReturn(user);
 
         //when && then

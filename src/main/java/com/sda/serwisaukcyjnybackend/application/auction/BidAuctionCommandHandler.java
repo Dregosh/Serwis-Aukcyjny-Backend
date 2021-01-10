@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.application.auction;
 
 import com.google.common.base.Preconditions;
+import com.sda.serwisaukcyjnybackend.application.auction.exception.CannotBidAuctionException;
 import com.sda.serwisaukcyjnybackend.application.command.Command;
 import com.sda.serwisaukcyjnybackend.application.command.CommandHandler;
 import com.sda.serwisaukcyjnybackend.application.command.CommandResult;
@@ -28,7 +29,8 @@ public class BidAuctionCommandHandler implements CommandHandler<BidAuctionComman
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid BidAuctionCommand command) {
-        var auction = auctionRepository.getOne(command.getAuctionId());
+        var auction = auctionRepository.findById(command.getAuctionId())
+                .orElseThrow();
         var user = userRepository.getOne(command.getUserId());
         Preconditions.checkArgument(!auction.getSellerId().equals(user.getId()),
                 "User cannot bid his own auction");
@@ -43,7 +45,8 @@ public class BidAuctionCommandHandler implements CommandHandler<BidAuctionComman
         try {
             setMaxBid(auction, bid, bidPrice);
         } catch (OptimisticLockException e) {
-            var updatedAuction = auctionRepository.getOne(auction.getId());
+            var updatedAuction = auctionRepository.findById(auction.getId())
+                    .orElseThrow();
             setMaxBid(updatedAuction, bid, bidPrice);
         }
     }
@@ -53,6 +56,8 @@ public class BidAuctionCommandHandler implements CommandHandler<BidAuctionComman
             auction.setMaxBid(bidPrice);
             auctionRepository.save(auction);
             bidRepository.save(bid);
+        } else {
+            throw new CannotBidAuctionException(auction.getId());
         }
     }
 
