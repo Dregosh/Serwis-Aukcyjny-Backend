@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.view.auction;
 
 import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
 import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
+import com.sda.serwisaukcyjnybackend.domain.auction.AuctionId;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
 import com.sda.serwisaukcyjnybackend.domain.auction.specification.AuctionSpecification;
 import com.sda.serwisaukcyjnybackend.domain.observation.ObservationRepository;
@@ -9,6 +10,7 @@ import com.sda.serwisaukcyjnybackend.view.shared.AuctionMapper;
 import com.sda.serwisaukcyjnybackend.view.shared.SimpleAuctionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,13 +26,11 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @Service
 @RequiredArgsConstructor
 public class AuctionService {
-
     private final AuctionRepository auctionRepository;
     private final ObservationRepository observationRepository;
 
-
     public AuctionDTO getAuctionById(Long auctionId) {
-        boolean observed = AuthenticatedService.getLoggedUserInfo()
+        var observed = AuthenticatedService.getLoggedUserInfo()
                 .map(userDetails -> observationRepository.existsByAuction_IdAndAndUser_Id(auctionId, userDetails.getUserId()))
                 .orElse(false);
         return AuctionMapper.map(auctionRepository.getById(auctionId), observed);
@@ -38,12 +38,13 @@ public class AuctionService {
 
     public Page<SimpleAuctionDTO> getSortedAuctionByCategory(Long categoryId, int page, int size,
                                                              AuctionSort sort, Map<String, String> filterMap) {
-        Pageable pageable = PageRequest.of(page, size, createSort(sort));
+        var pageable = PageRequest.of(page, size, createSort(sort));
         var specification = AuctionSpecification.getFromAuctionFilterMap(filterMap)
                                                 .categoryId(categoryId)
                                                 .build();
-        Page<Auction> auctions = auctionRepository.findAll(specification, pageable);
-        return auctions.map(AuctionMapper::mapToSimpleAuction);
+
+        return auctionRepository.findAll(specification, pageable)
+                .map(AuctionMapper::mapToSimpleAuction);
     }
 
     public List<SimpleAuctionDTO> getUserAuction(Long userId) {
@@ -55,13 +56,13 @@ public class AuctionService {
     public Page<SimpleAuctionDTO> getUserAuctionsSorted(Long userId, int page, int size,
                                                         AuctionSort sort,
                                                         Map<String, String> filterMap) {
-        Pageable pageable = PageRequest.of(page, size, createSort(sort));
+        var pageable = PageRequest.of(page, size, createSort(sort));
         filterMap.put("ALL_STATUSES", "true");
-        AuctionSpecification specification =
+        var specification =
                 AuctionSpecification.getFromAuctionFilterMap(filterMap).build();
         Specification<Auction> sellerConstraint =
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("seller"), userId);
-        Page<Auction> userAuctions =
+        var userAuctions =
                 this.auctionRepository.findAll(where(specification).and(sellerConstraint), pageable);
         return userAuctions.map(AuctionMapper::mapToSimpleAuction);
     }

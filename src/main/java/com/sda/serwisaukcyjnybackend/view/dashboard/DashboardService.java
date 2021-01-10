@@ -1,6 +1,7 @@
 package com.sda.serwisaukcyjnybackend.view.dashboard;
 
 import com.sda.serwisaukcyjnybackend.application.auth.AuthenticatedService;
+import com.sda.serwisaukcyjnybackend.domain.auction.AuctionId;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionStatus;
 import com.sda.serwisaukcyjnybackend.view.shared.AuctionMapper;
@@ -53,18 +54,28 @@ public class DashboardService {
     }
 
     public List<SimpleAuctionDTO> getActiveAuctionsOrderByLatestCreated() {
-        return this.auctionRepository
+        var ids = this.auctionRepository
                 .findAllByStatusNotOrderByStartDateTimeDesc(
                         AuctionStatus.ENDED, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getActiveAuctionsOrderByClosestToFinish() {
-        return this.auctionRepository
+        var ids = this.auctionRepository
                 .findAllByStatusNotOrderByEndDateTimeAsc(
                         AuctionStatus.ENDED, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
@@ -72,34 +83,54 @@ public class DashboardService {
 
     private List<SimpleAuctionDTO> getAllLoggedUserAuctionsOrderByEndTime(
             Long loggedUserId) {
-        return this.auctionRepository.findAllBySeller_IdOrderByEndDateTimeAsc(
+        var ids = this.auctionRepository.findAllBySeller_IdOrderByEndDateTimeAsc(
                 loggedUserId, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getAllBiddedByLoggedUser(Long loggedUserId) {
-        return this.auctionRepository
+        var ids = this.auctionRepository
                 .findAllByBids_User_Id(loggedUserId, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getLoggedUserObservedAuctions(Long loggedUserId) {
-        return this.auctionRepository
+        var ids = this.auctionRepository
                 .findAllByObservations_User_IdOrderByEndDateTimeAsc(
                         loggedUserId, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());
     }
 
     private List<SimpleAuctionDTO> getFinishedAuctionsOrderByEndTime() {
-        return this.auctionRepository
+        var ids = this.auctionRepository
                 .findAllByStatusOrderByEndDateTimeDesc(
                         AuctionStatus.ENDED, PageRequest.of(0, this.limit, createSort()))
+                .stream()
+                .map(AuctionId::getId)
+                .collect(Collectors.toList());
+
+        return auctionRepository.findAuctionsByIdIn(ids)
                 .stream()
                 .map(AuctionMapper::mapToSimpleAuction)
                 .collect(Collectors.toList());

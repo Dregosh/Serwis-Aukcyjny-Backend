@@ -9,6 +9,7 @@ import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
+import com.sda.serwisaukcyjnybackend.view.shared.validators.Name;
 import lombok.*;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
@@ -34,6 +35,13 @@ import java.util.Set;
 @NamedEntityGraph(name = "auction-photos-seller", attributeNodes = {
         @NamedAttributeNode("photos"),
         @NamedAttributeNode("seller")
+})
+@NamedEntityGraph(name = "auction-photos-purchase", attributeNodes = {
+        @NamedAttributeNode("photos"),
+        @NamedAttributeNode("seller"),
+        @NamedAttributeNode("purchase"),
+        @NamedAttributeNode("bids"),
+        @NamedAttributeNode("category")
 })
 public class Auction extends AbstractAggregateRoot<Auction> {
     @Id
