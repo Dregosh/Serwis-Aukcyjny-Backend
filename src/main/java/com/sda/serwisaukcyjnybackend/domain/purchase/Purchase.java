@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-public class Purchase {
+public class Purchase extends AbstractAggregateRoot<Purchase> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +58,14 @@ public class Purchase {
 
     public Long getBuyerId() {
         return this.getBuyer().getId();
+    }
+
+    @PostPersist
+    private void informAboutPurchase() {
+        registerEvent(new PurchaseCreated(id,
+                auction.getSeller().getEmail(), buyer.getEmail(),
+                auction.getSeller().getDisplayName(), buyer.getDisplayName(),
+                auction.getId(), auction.getTitle(), price,
+                isBuyNow));
     }
 }

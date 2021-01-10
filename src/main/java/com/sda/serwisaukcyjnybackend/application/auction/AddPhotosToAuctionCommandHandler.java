@@ -12,6 +12,7 @@ import com.sda.serwisaukcyjnybackend.domain.auction.Photo;
 import com.sda.serwisaukcyjnybackend.domain.auction.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class AddPhotosToAuctionCommandHandler implements CommandHandler<AddPhoto
     private final AuctionRepository auctionRepository;
 
     @Override
+    @Transactional
     public CommandResult<Void> handle(@Valid AddPhotosToAuctionCommand command) {
         var auction = auctionRepository.findAuctionByIdAndSellerId(command.getAuctionId(), command.getSellerId())
                 .orElseThrow(() -> new AuctionNotFoundException(command.getAuctionId(), command.getSellerId()));
