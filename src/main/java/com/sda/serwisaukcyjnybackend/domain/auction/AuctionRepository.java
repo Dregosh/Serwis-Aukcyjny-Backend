@@ -2,6 +2,7 @@ package com.sda.serwisaukcyjnybackend.domain.auction;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,56 +14,54 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends PagingAndSortingRepository<Auction, Long>, JpaSpecificationExecutor<Auction> {
 
-    List<AuctionId> findAllBySeller_IdOrderByEndDateTimeAsc(
-            @Param("sellerId") Long sellerId, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10BySeller_IdOrderByEndDateTimeAsc(Long sellerId, Sort sort);
 
 
-    List<AuctionId> findAllByStatusNotOrderByStartDateTimeDesc(
-            @Param("auctionStatus") AuctionStatus status, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10ByStatusNotOrderByStartDateTimeDesc(AuctionStatus status, Sort sort);
 
-    List<AuctionId> findAllByStatusNotOrderByEndDateTimeAsc(
-            @Param("auctionStatus") AuctionStatus status, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10ByStatusNotOrderByEndDateTimeAsc(AuctionStatus status, Sort sort);
 
-    List<AuctionId> findAllByStatusOrderByEndDateTimeDesc(
-            AuctionStatus status, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10ByStatusOrderByEndDateTimeDesc(AuctionStatus status, Sort sort);
 
-    List<AuctionId> findAllByObservations_User_IdOrderByEndDateTimeAsc(
-            Long observerId, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10ByObservations_User_IdOrderByEndDateTimeAsc(Long observerId, Sort sort);
 
-    List<AuctionId> findAllByBids_User_Id(Long bidderId, Pageable pageable);
+    @EntityGraph("auction-bids-purchase")
+    List<Auction> findFirst10ByBids_User_Id(Long bidderId, Sort sort);
 
-    @EntityGraph("auction-photos")
     List<Auction> findAllByStatusAndEndDateTimeBefore(AuctionStatus status, LocalDateTime now);
 
-    @EntityGraph("auction-photos")
     List<Auction> findAllByStatusAndStartDateTimeBefore(AuctionStatus status, LocalDateTime now);
 
-    @EntityGraph("auction-photos-seller")
+    @EntityGraph("auction-bids-purchase")
     List<Auction> findAllBySeller_Id(Long sellerId);
 
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-bids-purchase")
     @Query("select a from Auction a, in(a.bids) b " +
             "where b.user.id = :userId")
     List<Auction> findAllBidded(@Param("userId") Long userId);
 
-    @EntityGraph("auction-photos")
+    @EntityGraph("auction-bids-purchase")
     @Query("select a from Auction a, in(a.observations) o " +
             "where o.user.id = :userId")
     List<Auction> findAllObserved(@Param("userId") Long userId);
 
-    @EntityGraph("auction-photos-seller")
+    @EntityGraph("auction-seller")
     Auction getById(Long auctionId);
 
     @Override
     @NonNull
-    @EntityGraph("auction-photos-purchase")
+    @EntityGraph("auction-bids-purchase")
     Page<Auction> findAll(@Nullable Specification<Auction> spec, @Nullable Pageable pageable);
 
     @Query("select a from Auction a where a.id = :id")
@@ -75,8 +74,5 @@ public interface AuctionRepository extends PagingAndSortingRepository<Auction, L
 
     List<Auction> findAllByStatusNotAndEndDateTimeBetween(AuctionStatus status,
                                                        LocalDateTime earlierDate, LocalDateTime laterDate);
-
-    @EntityGraph("auction-photos-purchase")
-    Collection<Auction> findAuctionsByIdIn(Collection<Long> ids);
 
 }

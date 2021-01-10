@@ -21,10 +21,9 @@ public class AuctionMapper {
                 .title(auction.getTitle())
                 .bidPrice(auction.getMaxBid())
                 .buyNowPrice(auction.getBuyNowPrice())
-                .alreadyBidded(auction.getBids().size() > 0)
+                .alreadyBidded(!auction.getBids().isEmpty())
                 .biddersAmount(auction.getBids().size())
-                .mainPhotoName(auction.getPhotos().size() != 0 ?
-                               auction.getPhotos().get(0).getName() : null)
+                .mainPhotoName(auction.getPhotos().size() != 0 ? auction.getPhotos().get(0).getName() : null)
                 .status(auction.getStatus())
                 .isBought(auction.isBought())
                 .purchaseId(auction.getPurchase() != null ? auction.getPurchase().getId() : null)

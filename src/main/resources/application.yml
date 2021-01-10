@@ -42,8 +42,6 @@ app:
     maxTries: 3
   web:
     guiUrl: http://51.83.132.94:4200
-  dashboard:
-    limit: 10
   auction:
     maxPromoted: 10
     duration: 14

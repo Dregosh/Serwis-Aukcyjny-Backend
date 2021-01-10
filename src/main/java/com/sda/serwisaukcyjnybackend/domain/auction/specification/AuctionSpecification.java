@@ -8,10 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.FetchType;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -24,6 +22,8 @@ public class AuctionSpecification implements Specification<Auction> {
     private static final String PROMOTED = "isPromoted";
     private static final String STATUS = "status";
     private static final String ALL_STATUSES = "allStatuses";
+    private static final String BIDS = "bids";
+    private static final String PURCHASE = "purchase";
 
     private BigDecimal buyNowPriceFrom;
     private BigDecimal buyNowPriceTo;

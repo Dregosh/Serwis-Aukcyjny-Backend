@@ -9,7 +9,6 @@ import com.sda.serwisaukcyjnybackend.domain.auction.Auction;
 import com.sda.serwisaukcyjnybackend.domain.auction.AuctionRepository;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.purchase.PurchaseRepository;
-import com.sda.serwisaukcyjnybackend.domain.purchase.event.PurchaseCreated;
 import com.sda.serwisaukcyjnybackend.domain.user.User;
 import com.sda.serwisaukcyjnybackend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,34 +35,28 @@ public class BuyNowCommandHandler implements CommandHandler<BuyNowCommand, Void>
 
         Preconditions.checkArgument(!auction.getSellerId().equals(user.getId()), "User cannot buy own auction");
 
-        var purchase = tryPurchaseAuction(user, auction);
-        eventPublisher.publishEvent(new PurchaseCreated(purchase.getId(),
-                auction.getSeller().getEmail(), user.getEmail(),
-                auction.getSeller().getDisplayName(), user.getDisplayName(),
-                auction.getId(), auction.getTitle(), purchase.getPrice(),
-                purchase.getIsBuyNow()));
+        tryPurchaseAuction(user, auction);
         return CommandResult.ok();
     }
 
-    private Purchase tryPurchaseAuction(User user, Auction auction) {
+    private void tryPurchaseAuction(User user, Auction auction) {
         var purchase = new Purchase(user, auction, auction.getBuyNowPrice(), Boolean.TRUE);
 
         try {
-            return buyNow(auction, purchase);
+            buyNow(auction, purchase);
         } catch (OptimisticLockException e) {
             throw new CannotBuyNowException(auction.getId());
         }
     }
 
-    private Purchase buyNow(Auction auction, Purchase purchase) {
+    private void buyNow(Auction auction, Purchase purchase) {
         if (auction.canBeBoughtNow()) {
             auction.markAsEnded();
             auctionRepository.save(auction);
-            return purchaseRepository.save(purchase);
+            purchaseRepository.save(purchase);
         } else {
             throw new CannotBuyNowException(auction.getId());
         }
-
     }
 
     @Override
