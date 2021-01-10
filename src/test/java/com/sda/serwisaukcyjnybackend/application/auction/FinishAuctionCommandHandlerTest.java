@@ -39,7 +39,7 @@ class FinishAuctionCommandHandlerTest {
     void shouldFinishPromotedAuctionWithPurchase() {
        //given
         var command = new FinishAuctionCommand(1L);
-        when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
+        when(auctionRepository.getOne(anyLong())).thenReturn(auctionWithSeller());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.TEN, BigDecimal.ONE, true));
         when(userRepository.save(any())).thenReturn(new User());
         when(bidRepository.existsByAuction(any())).thenReturn(true);
@@ -54,7 +54,7 @@ class FinishAuctionCommandHandlerTest {
     void shouldFinishNormalAuctionWithPurchase() {
         //given
         var command = new FinishAuctionCommand(1L);
-        when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
+        when(auctionRepository.getOne(anyLong())).thenReturn(auctionWithSeller());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.TEN, BigDecimal.ONE, false));
         when(bidRepository.existsByAuction(any())).thenReturn(true);
         when(bidRepository.getByAuctionAndBidPrice(any(), any())).thenReturn(prepareBid(BigDecimal.TEN));
@@ -68,7 +68,7 @@ class FinishAuctionCommandHandlerTest {
     void shouldFinishPromotedAuctionWithoutPurchase() {
         //given
         var command = new FinishAuctionCommand(1L);
-        when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
+        when(auctionRepository.getOne(anyLong())).thenReturn(auctionWithSeller());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.ONE, BigDecimal.TEN, true));
         when(bidRepository.existsByAuction(any())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(new User());
@@ -81,7 +81,7 @@ class FinishAuctionCommandHandlerTest {
     void shouldFinishNormalAuctionWithoutPurchase() {
         //given
         var command = new FinishAuctionCommand(1L);
-        when(auctionRepository.getOne(anyLong())).thenReturn(new Auction());
+        when(auctionRepository.getOne(anyLong())).thenReturn(auctionWithSeller());
         when(auctionRepository.save(any())).thenReturn(prepareAuction(AuctionStatus.ENDED, BigDecimal.ONE, BigDecimal.TEN, false));
         when(bidRepository.existsByAuction(any())).thenReturn(false);
 
@@ -101,8 +101,13 @@ class FinishAuctionCommandHandlerTest {
 
     Bid prepareBid(BigDecimal bidPrice) {
         Bid bid = new Bid();
+        bid.setUser(new User());
         bid.setBidPrice(bidPrice);
         return bid;
     }
-
+    Auction auctionWithSeller() {
+        Auction auction = new Auction();
+        auction.setSeller(new User());
+        return auction;
+    }
 }

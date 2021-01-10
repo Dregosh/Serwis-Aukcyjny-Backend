@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByDisplayName(String displayName);
 
-    List<User> findAllByAccountTypeAndPremiumAccountExpirationAfter(AccountType accountType, LocalDate now);
+    List<User> findAllByAccountTypeAndPremiumAccountExpirationBefore(AccountType accountType, LocalDate now);
 }

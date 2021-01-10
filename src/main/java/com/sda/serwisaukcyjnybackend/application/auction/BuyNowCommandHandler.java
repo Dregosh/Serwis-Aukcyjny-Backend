@@ -25,7 +25,6 @@ public class BuyNowCommandHandler implements CommandHandler<BuyNowCommand, Void>
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
     private final PurchaseRepository purchaseRepository;
-    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -51,7 +50,7 @@ public class BuyNowCommandHandler implements CommandHandler<BuyNowCommand, Void>
 
     private void buyNow(Auction auction, Purchase purchase) {
         if (auction.canBeBoughtNow()) {
-            auction.markAsEnded();
+            auction.markAsEnded(true);
             auctionRepository.save(auction);
             purchaseRepository.save(purchase);
         } else {

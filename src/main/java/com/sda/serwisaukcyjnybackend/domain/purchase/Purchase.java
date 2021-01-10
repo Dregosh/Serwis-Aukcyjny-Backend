@@ -47,6 +47,7 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
         this.auction = auction;
         this.price = maxBid.getBidPrice();
         this.isBuyNow = isBuyNow;
+        informAboutPurchase();
     }
 
     public Purchase(User user, Auction auction, BigDecimal price, Boolean isBuyNow) {
@@ -54,18 +55,16 @@ public class Purchase extends AbstractAggregateRoot<Purchase> {
         this.auction = auction;
         this.price = price;
         this.isBuyNow = isBuyNow;
+        informAboutPurchase();
     }
 
     public Long getBuyerId() {
         return this.getBuyer().getId();
     }
 
-    @PostPersist
     private void informAboutPurchase() {
-        registerEvent(new PurchaseCreated(id,
-                auction.getSeller().getEmail(), buyer.getEmail(),
-                auction.getSeller().getDisplayName(), buyer.getDisplayName(),
-                auction.getId(), auction.getTitle(), price,
-                isBuyNow));
+        registerEvent(new PurchaseCreated(id, auction.getSeller().getEmail(), buyer.getEmail(),
+                auction.getSeller().getDisplayName(), buyer.getDisplayName(), auction.getId(),
+                auction.getTitle(), price, isBuyNow));
     }
 }

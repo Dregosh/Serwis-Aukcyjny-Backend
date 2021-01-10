@@ -48,11 +48,11 @@ public class FinishAuctionCommandHandler implements CommandHandler<FinishAuction
     Auction endAuctionAndGet(Long auctionId) {
         try {
             var auction = auctionRepository.getOne(auctionId);
-            auction.setStatus(AuctionStatus.ENDED);
+            auction.markAsEnded(false);
             return auctionRepository.save(auction);
         } catch (OptimisticLockException e) {
             var auction = auctionRepository.getOne(auctionId);
-            auction.setStatus(AuctionStatus.ENDED);
+            auction.markAsEnded(false);
             return auctionRepository.save(auction);
         }
     }

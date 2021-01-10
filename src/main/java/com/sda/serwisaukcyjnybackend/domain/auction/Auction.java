@@ -118,18 +118,7 @@ public class Auction extends AbstractAggregateRoot<Auction> {
         this.category = category;
         this.version = 0L;
         this.status = AuctionStatus.CREATED;
-    }
-
-    @PostPersist
-    private void informAboutEvent() {
-
-        if(this.getStatus() == AuctionStatus.CREATED) {
-            informAboutCreatedAuction();
-        }
-
-        if(this.getStatus() == AuctionStatus.ENDED && this.bids.isEmpty()) {
-            informAboutEndedAuctionWithoutPurchase();
-        }
+        informAboutCreatedAuction();
     }
 
     private void informAboutCreatedAuction() {
@@ -153,8 +142,11 @@ public class Auction extends AbstractAggregateRoot<Auction> {
         return purchase != null && status == AuctionStatus.ENDED;
     }
 
-    public void markAsEnded() {
+    public void markAsEnded(boolean buyNow) {
         status = AuctionStatus.ENDED;
+        if (this.bids.isEmpty() && !buyNow) {
+            informAboutEndedAuctionWithoutPurchase();
+        }
     }
 
     public boolean canBeBoughtNow() {

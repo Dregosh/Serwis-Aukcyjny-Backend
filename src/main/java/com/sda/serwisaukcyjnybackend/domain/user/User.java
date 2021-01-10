@@ -6,9 +6,11 @@ import com.sda.serwisaukcyjnybackend.domain.bid.Bid;
 import com.sda.serwisaukcyjnybackend.domain.observation.Observation;
 import com.sda.serwisaukcyjnybackend.domain.purchase.Purchase;
 import com.sda.serwisaukcyjnybackend.domain.shared.Address;
+import com.sda.serwisaukcyjnybackend.domain.user.event.PremiumAccountExpired;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -21,7 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class User {
+public class User extends AbstractAggregateRoot<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -97,5 +99,6 @@ public class User {
     public void setNormalAccount() {
         this.accountType = AccountType.NORMAL;
         this.premiumAccountExpiration = null;
+        registerEvent(new PremiumAccountExpired(displayName, email));
     }
 }

@@ -21,18 +21,13 @@ import java.time.LocalDateTime;
 @Log4j2
 public class PremiumAccountsCleaner {
     private final UserRepository userRepository;
-    private final ApplicationEventPublisher eventPublisher;
 
     @Scheduled(cron = "${app.premium.cleanerCron}")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setToNormalAccountType() {
         LocalDate checkTime = LocalDate.now();
-        var users = userRepository.findAllByAccountTypeAndPremiumAccountExpirationAfter(AccountType.PREMIUM, checkTime);
+        var users = userRepository.findAllByAccountTypeAndPremiumAccountExpirationBefore(AccountType.PREMIUM, checkTime);
         log.info("SCHEDULED DELETE PREMIUM ACCOUNTS - found {} premium accounts to delete", users.size());
-        for (User user : users) {
-            updateUserStatus(user);
-            eventPublisher.publishEvent(new PremiumAccountExpired(user.getDisplayName(), user.getEmail()));
-        }
     }
 
     private void updateUserStatus(User user) {
