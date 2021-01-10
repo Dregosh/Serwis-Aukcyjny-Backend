@@ -68,6 +68,11 @@ public class AuctionController {
         commandDispatcher.handle(buyerRatePurchaseCommand.withUserId(getLoggedUser().getUserId()));
     }
 
+    @PostMapping("/rate-seller")
+    public void rateBySeller(@RequestBody @Valid SellerRatePurchaseCommand sellerRatePurchaseCommand) {
+        commandDispatcher.handle(sellerRatePurchaseCommand.withUserId(getLoggedUser().getUserId()));
+    }
+
     @GetMapping("/byCategory/{categoryId}")
     public Page<SimpleAuctionDTO> getByCategory(@PathVariable("categoryId") Long categoryId,
                                                 @RequestParam("page") int page,
