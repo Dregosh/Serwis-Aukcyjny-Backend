@@ -32,10 +32,10 @@ class ResendVerificationCodeHandlerTest {
     @Test
     void shouldResendVerificationCode() {
         //given
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
         when(verificationCodeRepository.save(any())).thenReturn(new VerificationCode());
         doNothing().when(eventPublisher).publishEvent(any(UserRegistered.class));
-        var command = new ResendVerificationCodeCommand("test@test");
+        var command = new ResendVerificationCodeCommand(1L);
 
         //when
         handler.handle(command);
@@ -44,8 +44,8 @@ class ResendVerificationCodeHandlerTest {
     @Test
     void shouldNotResendIfEmailNotFound() {
         //given
-        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
-        var command = new ResendVerificationCodeCommand("test@test");
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        var command = new ResendVerificationCodeCommand(1L);
 
         //when
         handler.handle(command);

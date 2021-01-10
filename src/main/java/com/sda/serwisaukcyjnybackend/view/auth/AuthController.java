@@ -49,7 +49,7 @@ public class AuthController {
     @PostMapping("/resending-verification-code")
     public void resendVerificationCode() {
         commandDispatcher
-                .handle(new ResendVerificationCodeCommand(getLoggedUser().getEmail()));
+                .handle(new ResendVerificationCodeCommand(getLoggedUser().getUserId()));
     }
 
     @PostMapping("/logout")

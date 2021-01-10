@@ -25,7 +25,7 @@ public class ResendVerificationCodeHandler implements CommandHandler<ResendVerif
     @Override
     @Transactional
     public CommandResult<Void> handle(@Valid ResendVerificationCodeCommand command) {
-        userRepository.findByEmail(command.getEmail())
+        userRepository.findById(command.getId())
                 .ifPresent(this::resendVerificationCode);
 
         return CommandResult.ok();
