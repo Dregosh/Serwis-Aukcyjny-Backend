@@ -729,13 +729,14 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "37ef7fba-f9cb-4a44-b7e5-bab4a3ce9255",
       "redirectUris": [
         "http://localhost:8080/*",
         "http://localhost:4200/*"
       ],
       "webOrigins": [
-        "http://localhost:4200/*"
+        "http://localhost:4200/*",
+        "http://localhost:4200"
       ],
       "notBefore": 0,
       "bearerOnly": false,
